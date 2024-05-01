@@ -2,7 +2,7 @@ import 'package:moony_app/model/category.dart';
 import 'package:moony_app/model/category_icon.dart';
 
 class InitialData {
-  static const categories = [
+  static const categories = <Category>[
     Category(
       id: 0,
       isIncome: false,
@@ -392,6 +392,329 @@ class InitialData {
         iconCategory: 'money',
         icon: 'money',
       ),
+    ),
+  ];
+
+  static const icons = <CategoryIcon>[
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'education',
+      icon: 'art',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'education',
+      icon: 'guitar',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'education',
+      icon: 'school',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'electronics',
+      icon: 'camera',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'electronics',
+      icon: 'computer',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'electronics',
+      icon: 'headphones',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'electronics',
+      icon: 'time',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'entertainment',
+      icon: 'badminton',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'entertainment',
+      icon: 'baseball',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'entertainment',
+      icon: 'basketball',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'entertainment',
+      icon: 'bowling',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'entertainment',
+      icon: 'soccer',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'entertainment',
+      icon: 'swimming',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'entertainment',
+      icon: 'tennis',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'family',
+      icon: 'bear',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'fitness',
+      icon: 'dumbbell',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'fitness',
+      icon: 'exercise',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'fitness',
+      icon: 'fight',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'beer',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'fish',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'food',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'fruit',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'ground',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'ice-cream',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'ice-tea',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'juice',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'meat',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'milk',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'soft-drink',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'tea-cup',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'food',
+      icon: 'water',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'furniture',
+      icon: 'air_conditioner',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'furniture',
+      icon: 'dryer',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'furniture',
+      icon: 'fridge',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'furniture',
+      icon: 'mattress',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'furniture',
+      icon: 'television',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'furniture',
+      icon: 'thunder',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'income',
+      icon: 'credit_card',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'income',
+      icon: 'dues',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'income',
+      icon: 'dues',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'life',
+      icon: 'camping',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'life',
+      icon: 'flower',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'life',
+      icon: 'camping',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'medical',
+      icon: 'dentalcare',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'money',
+      icon: 'cash',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'money',
+      icon: 'pay',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'cellphone',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'dress',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'glasses',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'hat',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'lingerie',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'makeup',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'mask',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'pants',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'shoe',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'showergel',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'slippers',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'sunglasses',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'shopping',
+      icon: 'tshirt',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'transportation',
+      icon: 'bike',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'transportation',
+      icon: 'boat',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'transportation',
+      icon: 'car',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'transportation',
+      icon: 'motocross',
+    ),
+    CategoryIcon(
+      id: 0,
+      iconCategory: 'transportation',
+      icon: 'washcar',
     ),
   ];
 }

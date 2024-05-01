@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:month_year_picker/month_year_picker.dart';
 import 'package:moony_app/controller/transaction_controller.dart';
 import 'package:moony_app/theme/colors.dart';
 
@@ -129,7 +128,7 @@ class _MonthlyStatusCardState extends State<MonthlyStatusCard> {
       onSelected: (month, year) {
         transactionController.setMonthYear(month, year);
       },
-      initialSelectedMonth: DateTime.now().month,
+      initialSelectedMonth: transactionController.currentTime.month,
       initialSelectedYear: DateTime.now().year,
       highlightColor: AppColors.spiroDiscoBall,
     );

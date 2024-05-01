@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moony_app/controller/categories_controller.dart';
-import 'package:moony_app/ui/home/widgets/transaction_app_bar.dart';
+import 'package:moony_app/ui/home/widgets/simple_app_bar.dart';
 
 import '../../../model/category.dart';
 
@@ -16,7 +16,7 @@ class SelectCategoryScreen extends StatelessWidget {
       ..fetchCategories();
 
     return Scaffold(
-      appBar: const TransactionAppBar(
+      appBar: const SimpleAppBar(
         title: 'Categories',
         actions: [],
       ),

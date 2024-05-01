@@ -1,11 +1,12 @@
 import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
-import 'package:moony_app/core/ui/custom_bottom_bar.dart';
 import 'package:moony_app/ui/chart/screens/chart_screen.dart';
 import 'package:moony_app/ui/home/screens/home_screen.dart';
 import 'package:moony_app/ui/savings/screens/savings_screen.dart';
 import 'package:moony_app/ui/settings/screens/settings_screen.dart';
+
+import '../../../core/ui/widgets/custom_bottom_bar.dart';
 
 class ShellScreen extends StatefulWidget {
   const ShellScreen({super.key});
@@ -29,7 +30,7 @@ class _ShellScreenState extends State<ShellScreen>
           });
         }
       });
-    ;
+
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -59,7 +60,7 @@ class _ShellScreenState extends State<ShellScreen>
       onPopInvoked: (_) {
         if (tabController.index > 0) {
           tabController.animateTo(0);
-        }else {
+        } else {
           Navigator.pop(context);
         }
       },

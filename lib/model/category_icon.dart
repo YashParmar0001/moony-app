@@ -17,6 +17,16 @@ class CategoryIcon {
     return 'CategoryIcon{ iconCategory: $iconCategory, icon: $icon,}';
   }
 
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! CategoryIcon) return false;
+    return iconCategory == other.iconCategory && icon == other.icon;
+  }
+
+  @override
+  int get hashCode => iconCategory.hashCode ^ icon.hashCode;
+
   CategoryIcon copyWith({
     int? id,
     String? iconCategory,

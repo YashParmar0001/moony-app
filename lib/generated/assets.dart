@@ -53,6 +53,8 @@ class Assets {
   static const String furnitureThunder = 'assets/category_icons/furniture/thunder.png';
   static const String furnitureWrench = 'assets/category_icons/furniture/wrench.png';
   static const String iconsCalendar = 'assets/icons/calendar.svg';
+  static const String iconsMoneyIn = 'assets/icons/money_in.png';
+  static const String iconsMoneyOut = 'assets/icons/money_out.png';
   static const String iconsNote = 'assets/icons/note.svg';
   static const String incomeBonus = 'assets/category_icons/income/bonus.png';
   static const String incomeCreditCard = 'assets/category_icons/income/credit_card.png';

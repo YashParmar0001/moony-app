@@ -8,10 +8,13 @@ import 'package:moony_app/ui/home/widgets/category_selection_field.dart';
 import 'package:moony_app/ui/home/widgets/date_field.dart';
 import 'package:moony_app/ui/home/widgets/money_field.dart';
 import 'package:moony_app/ui/home/widgets/notes_field.dart';
-import 'package:moony_app/ui/home/widgets/transaction_app_bar.dart';
+import 'package:moony_app/ui/home/widgets/simple_app_bar.dart';
 
 class AddTransactionScreen extends StatefulWidget {
-  const AddTransactionScreen({super.key, required this.currentTransactionController,});
+  const AddTransactionScreen({
+    super.key,
+    required this.currentTransactionController,
+  });
 
   final CurrentTransactionController currentTransactionController;
 
@@ -52,7 +55,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TransactionAppBar(
+      appBar: SimpleAppBar(
         title: 'Add Transaction',
         actions: [
           TextButton(

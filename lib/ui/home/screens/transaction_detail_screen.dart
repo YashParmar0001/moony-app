@@ -1,16 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:moony_app/controller/current_transaction_controller.dart';
 import 'package:moony_app/controller/transaction_controller.dart';
-import 'package:moony_app/core/ui/alert_dialog.dart';
+import 'package:moony_app/core/ui/widgets/alert_dialog.dart';
 import 'package:moony_app/generated/assets.dart';
 import 'package:moony_app/model/transaction.dart';
 import 'package:moony_app/theme/colors.dart';
 import 'package:moony_app/ui/home/screens/edit_transaction_screen.dart';
-import 'package:moony_app/ui/home/widgets/transaction_app_bar.dart';
+import 'package:moony_app/ui/home/widgets/simple_app_bar.dart';
 
 class TransactionDetailsScreen extends StatefulWidget {
   const TransactionDetailsScreen({super.key, required this.transaction});
@@ -34,7 +33,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TransactionAppBar(
+      appBar: SimpleAppBar(
         title: 'Transaction Details',
         actions: [
           IconButton(

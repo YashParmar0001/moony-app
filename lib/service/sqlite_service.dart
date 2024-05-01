@@ -3,6 +3,7 @@ import 'dart:developer' as dev;
 import 'package:moony_app/core/data/initial_data.dart';
 import 'package:moony_app/model/category.dart';
 import 'package:moony_app/model/category_icon.dart';
+import 'package:moony_app/model/saving.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:moony_app/model/transaction.dart' as t;
@@ -39,7 +40,27 @@ class SqliteService {
           "icon TEXT"
           ")",
         );
+        await database.execute(
+          "CREATE TABLE savings ("
+          "saving_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+          "amount INTEGER, "
+          "title TEXT, "
+          "date INTEGER, "
+          "icon_id INTEGER"
+          ")",
+        );
+        await database.execute(
+          "CREATE TABLE saving_history ("
+          "history_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+          "saving_id INTEGER, "
+          "money_in INTEGER, "
+          "date INTEGER, "
+          "amount INTEGER, "
+          "description TEXT"
+          ")",
+        );
         await populateCategories(database);
+        await populateIcons(database);
       },
       version: 1,
     );
@@ -76,6 +97,17 @@ class SqliteService {
       whereArgs: [transaction.id],
     );
     dev.log('Updated transaction: $id', name: 'Transaction');
+    return id;
+  }
+
+  Future<int> addSaving(Saving saving) async {
+    final Database db = await initializeDB();
+    final id = await db.insert(
+      'savings',
+      saving.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    dev.log('Inserted saving: $id', name: 'Saving');
     return id;
   }
 
@@ -132,6 +164,30 @@ class SqliteService {
       return t.Transaction.fromMap(map);
     }).toList();
     // dev.log('Final result: $list', name: 'Transaction');
+    return list;
+  }
+
+  Future<List<Saving>> getSavings() async {
+    final db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from savings '
+      'join category_icon on savings.icon_id = category_icon.icon_id',
+    );
+    final list = queryResult.map((e) {
+      final map = {
+        'id': e['saving_id'],
+        'amount': e['amount'],
+        'title': e['title'],
+        'date': e['date'],
+        'icon': {
+          'icon_id': e['icon_id'],
+          'icon_category': e['icon_category'],
+          'icon': e['icon'],
+        },
+        'history': null,
+      };
+      return Saving.fromMap(map);
+    }).toList();
     return list;
   }
 
@@ -192,9 +248,20 @@ class SqliteService {
         ),
       );
       // Insert the category
-      final categoryId = await db.insert(
+      await db.insert(
         'category',
         category.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+  }
+
+  Future<void> populateIcons(Database db) async {
+    dev.log('Populating the icons', name: 'Database');
+    for (CategoryIcon icon in InitialData.icons) {
+      await db.insert(
+        'category_icon',
+        icon.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }

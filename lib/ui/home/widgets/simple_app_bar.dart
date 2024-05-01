@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../theme/colors.dart';
 
-class TransactionAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const TransactionAppBar({
+class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const SimpleAppBar({
     super.key,
     required this.title,
     required this.actions,
