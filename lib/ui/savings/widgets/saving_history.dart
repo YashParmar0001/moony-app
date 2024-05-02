@@ -97,14 +97,14 @@ class _SavingHistoryState extends State<SavingHistory> {
 }
 
 class _HistoryCard extends StatelessWidget {
-  const _HistoryCard({super.key, required this.history});
+  const _HistoryCard({required this.history});
 
   final sh.SavingHistory history;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.to(() => const HistoryDetailsScreen()),
+      onTap: () => Get.to(() => HistoryDetailsScreen(history: history)),
       child: Container(
         margin: const EdgeInsets.symmetric(
           horizontal: 10,

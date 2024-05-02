@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:moony_app/controller/current_saving_history_controller.dart';
+import 'package:moony_app/controller/savings_controller.dart';
 import 'package:moony_app/generated/assets.dart';
+import 'package:moony_app/model/saving_history.dart';
 import 'package:moony_app/theme/colors.dart';
 import 'package:moony_app/ui/home/widgets/simple_app_bar.dart';
+import 'package:moony_app/ui/savings/screens/savings_detail_screen.dart';
 import 'package:moony_app/ui/savings/screens/update_history_screen.dart';
 
+import '../../../core/ui/widgets/alert_dialog.dart';
+
 class HistoryDetailsScreen extends StatefulWidget {
-  const HistoryDetailsScreen({super.key});
+  const HistoryDetailsScreen({super.key, required this.history});
+
+  final SavingHistory history;
 
   @override
   State<HistoryDetailsScreen> createState() => _HistoryDetailsScreenState();
@@ -57,7 +66,7 @@ class _HistoryDetailsScreenState extends State<HistoryDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '-20',
+                    '${widget.history.moneyIn ? '' : '-'}${widget.history.amount}',
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                           fontFamily: 'Nimbus-Medium',
                         ),
@@ -75,7 +84,13 @@ class _HistoryDetailsScreenState extends State<HistoryDetailsScreen> {
               bottom: 5,
               right: 50,
               child: IconButton.filled(
-                onPressed: () => Get.to(() => const UpdateHistoryScreen()),
+                onPressed: () => Get.to(
+                  () => UpdateHistoryScreen(
+                    currentSavingHistoryController:
+                        CurrentSavingHistoryController(),
+                    history: widget.history,
+                  ),
+                ),
                 icon: const Icon(Icons.edit),
                 iconSize: 30,
                 style: const ButtonStyle(
@@ -102,7 +117,7 @@ class _HistoryDetailsScreenState extends State<HistoryDetailsScreen> {
         ),
         const SizedBox(width: 10),
         Text(
-          '24/08/2004',
+          DateFormat('dd/MM/y').format(widget.history.date),
           style: Theme.of(context).textTheme.displayMedium?.copyWith(
                 fontFamily: 'Nimbus-Medium',
                 fontWeight: FontWeight.w700,
@@ -125,7 +140,7 @@ class _HistoryDetailsScreenState extends State<HistoryDetailsScreen> {
         SizedBox(
           width: MediaQuery.of(context).size.width - 150,
           child: Text(
-            'Get the money out from laptop savings',
+            widget.history.description,
             style: Theme.of(context).textTheme.displayMedium?.copyWith(
                   fontFamily: 'Nimbus-Medium',
                   fontWeight: FontWeight.w700,
@@ -142,11 +157,13 @@ class _HistoryDetailsScreenState extends State<HistoryDetailsScreen> {
       children: [
         SizedBox(
           width: 30,
-          child: Image.asset(Assets.iconsMoneyIn),
+          child: Image.asset(
+            widget.history.moneyIn ? Assets.iconsMoneyIn : Assets.iconsMoneyOut,
+          ),
         ),
         const SizedBox(width: 10),
         Text(
-          'Money in',
+          widget.history.moneyIn ? 'Money in' : 'Money out',
           style: Theme.of(context).textTheme.displayMedium?.copyWith(
                 fontFamily: 'Nimbus-Medium',
                 fontWeight: FontWeight.w700,
@@ -156,42 +173,51 @@ class _HistoryDetailsScreenState extends State<HistoryDetailsScreen> {
     );
   }
 
-  Future<void> _deleteTransaction() async {
-    // final response =
-    // await transactionsController.deleteTransaction(widget.transaction.id);
-    // if (response) {
-    //   Get.back();
-    //   Get.snackbar(
-    //     'Transaction',
-    //     'Transaction deleted successfully!',
-    //     snackPosition: SnackPosition.BOTTOM,
-    //   );
-    //   transactionsController.fetchTransactions();
-    // } else {
-    //   Get.snackbar(
-    //     'Transaction',
-    //     'Something went wrong. Please try again!',
-    //     snackPosition: SnackPosition.BOTTOM,
-    //   );
-    // }
+  Future<void> _deleteSavingHistory() async {
+    final savingsController = Get.find<SavingsController>();
+    final savings = savingsController.savings;
+    final response = await savingsController.deleteSavingHistory(
+      widget.history.id,
+      savings.where((e) => e.id == widget.history.savingId).first,
+    );
+    Get.closeAllSnackbars();
+    if (response.error == null) {
+      Get.back();
+      Get.off(
+        () => SavingsDetailScreen(saving: response.data!, initialTabIndex: 1),
+        preventDuplicates: false,
+      );
+      Get.snackbar(
+        'Savings',
+        'Successfully deleted saving history!',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      Get.find<SavingsController>().fetchSavings();
+    } else {
+      Get.snackbar(
+        'Savings',
+        response.error!,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 
   void _showDeleteDialog(BuildContext context) {
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return CustomAlertDialog(
-    //       onPressOk: () {
-    //         Get.back();
-    //         _deleteTransaction();
-    //       },
-    //       onPressCancel: () {
-    //         Get.back();
-    //       },
-    //       title: 'Warning',
-    //       content: 'Do you really want to delete this transaction?',
-    //     );
-    //   },
-    // );
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomAlertDialog(
+          onPressOk: () {
+            Get.back();
+            _deleteSavingHistory();
+          },
+          onPressCancel: () {
+            Get.back();
+          },
+          title: 'Warning',
+          content: 'Do you really want to delete this?',
+        );
+      },
+    );
   }
 }

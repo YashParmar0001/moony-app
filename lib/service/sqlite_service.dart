@@ -108,6 +108,17 @@ class SqliteService {
     return response;
   }
 
+  Future<int> deleteSavingHistoryById(int id) async {
+    final Database db = await initializeDB();
+    final response = await db.delete(
+      'saving_history',
+      where: 'history_id = ?',
+      whereArgs: [id],
+    );
+    dev.log('Delete history response: $response', name: 'Saving');
+    return response;
+  }
+
   Future<int> updateTransaction(t.Transaction transaction) async {
     dev.log('Update transaction: $transaction', name: 'Transaction');
     final Database db = await initializeDB();
@@ -131,6 +142,18 @@ class SqliteService {
       whereArgs: [saving.id],
     );
     dev.log('Updated saving: $id', name: 'Saving');
+    return id;
+  }
+
+  Future<int> updateSavingHistory(SavingHistory history) async {
+    final Database db = await initializeDB();
+    final id = await db.update(
+      'saving_history',
+      history.toMap(),
+      where: 'saving_id = ?',
+      whereArgs: [history.savingId],
+    );
+    dev.log('Updated saving history: saving id: ${history.savingId} | id: $id');
     return id;
   }
 
@@ -237,6 +260,30 @@ class SqliteService {
       return Saving.fromMap(map);
     }).toList();
     return list;
+  }
+
+  Future<Saving> getSaving(int id) async {
+    final db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from savings '
+      'join category_icon on savings.icon_id = category_icon.icon_id',
+    );
+    final map = queryResult.first;
+    final savingMap = {
+      'id': map['saving_id'],
+      'amount': map['amount'],
+      'title': map['title'],
+      'date': map['date'],
+      'icon': {
+        'icon_id': map['icon_id'],
+        'icon_category': map['icon_category'],
+        'icon': map['icon'],
+      },
+      'history': null,
+    };
+    var saving = Saving.fromMap(savingMap);
+    saving = saving.copyWith(history: await getSavingHistory(saving.id));
+    return saving;
   }
 
   Future<List<SavingHistory>> getSavingHistory(int savingId) async {

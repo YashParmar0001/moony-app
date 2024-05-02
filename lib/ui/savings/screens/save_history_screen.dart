@@ -107,10 +107,10 @@ class _SaveHistoryScreenState extends State<SaveHistoryScreen> {
       widget.saving,
       widget.moneyIn,
     );
-    if (response.error ==  null) {
+    if (response.error == null) {
       Get.back();
       Get.off(
-            () => SavingsDetailScreen(saving: response.data!),
+        () => SavingsDetailScreen(saving: response.data!, initialTabIndex: 1),
         preventDuplicates: false,
       );
       Get.snackbar(

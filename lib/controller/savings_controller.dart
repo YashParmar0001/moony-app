@@ -1,6 +1,7 @@
 import 'dart:developer' as dev;
 
 import 'package:get/get.dart';
+import 'package:moony_app/model/query_response.dart';
 import 'package:moony_app/model/saving.dart';
 import 'package:moony_app/model/saving_history.dart';
 import 'package:moony_app/service/sqlite_service.dart';
@@ -60,5 +61,19 @@ class SavingsController extends GetxController {
     final count = await service.deleteSaving(id);
     final historyCount = await service.deleteSavingHistory(id);
     return count >= 1 && historyCount >= 1;
+  }
+
+  Future<QueryResponse<Saving>> deleteSavingHistory(int id, Saving saving,) async {
+    const queryResponse = QueryResponse<Saving>(data: null, error: null);
+    final count = await service.deleteSavingHistoryById(id);
+    if (count >= 1) {
+      return queryResponse.copyWith(
+        data: saving.copyWith(
+          history: saving.history..removeWhere((e) => e.id == id),
+        ),
+      );
+    }else {
+      return queryResponse.copyWith(error: 'Something went wrong!');
+    }
   }
 }

@@ -11,9 +11,10 @@ import 'package:moony_app/ui/savings/widgets/saving_history.dart';
 import '../../../core/ui/widgets/alert_dialog.dart';
 
 class SavingsDetailScreen extends StatefulWidget {
-  const SavingsDetailScreen({super.key, required this.saving});
+  const SavingsDetailScreen({super.key, required this.saving, this.initialTabIndex = 0,});
 
   final Saving saving;
+  final int initialTabIndex;
 
   @override
   State<SavingsDetailScreen> createState() => _SavingsDetailScreenState();
@@ -51,6 +52,7 @@ class _SavingsDetailScreenState extends State<SavingsDetailScreen> {
       ),
       body: DefaultTabController(
         length: 2,
+        initialIndex: widget.initialTabIndex,
         child: Column(
           children: [
             const TabBar(

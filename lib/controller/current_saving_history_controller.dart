@@ -73,6 +73,47 @@ class CurrentSavingHistoryController extends GetxController {
     }
   }
 
+  Future<QueryResponse<Saving>> updateSavingHistory(
+    int id,
+    Saving saving,
+    bool moneyIn,
+  ) async {
+    QueryResponse<Saving> queryResponse = const QueryResponse<Saving>(
+      data: null,
+      error: null,
+    );
+    if (!validate()) {
+      return queryResponse.copyWith(
+        error: 'Please fill the details properly!',
+      );
+    }
+
+    final service = Get.find<SqliteService>();
+
+    try {
+      final savingHistory = SavingHistory(
+        id: id,
+        savingId: saving.id,
+        amount: amount,
+        description: description,
+        moneyIn: moneyIn,
+        date: date!,
+      );
+
+      final response = await service.updateSavingHistory(savingHistory);
+
+      if (response == 0) {
+        return queryResponse.copyWith(error: 'Something went wrong!');
+      } else {
+        final updatedSaving = await service.getSaving(saving.id);
+        return queryResponse.copyWith(data: updatedSaving);
+      }
+    } catch (e) {
+      dev.log('Got error: $e', name: 'Saving');
+      return queryResponse.copyWith(error: 'Something went wrong!');
+    }
+  }
+
   bool validateAmount() {
     if (amount == 0) {
       _amountError.value = 'Amount cannot be empty or 0!';
@@ -87,5 +128,11 @@ class CurrentSavingHistoryController extends GetxController {
     if (!validateAmount()) return false;
 
     return true;
+  }
+
+  void populate(SavingHistory history) {
+    amount = history.amount;
+    description = history.description;
+    date = history.date;
   }
 }
