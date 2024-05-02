@@ -1,14 +1,14 @@
 import 'package:moony_app/model/transaction.dart';
 
-class QueryResponse {
-  const QueryResponse({required this.transaction, required this.error});
+class QueryResponse<T> {
+  const QueryResponse({required this.data, required this.error});
 
-  final Transaction? transaction;
+  final T? data;
   final String? error;
 
-  QueryResponse copyWith({Transaction? transaction, String? error}) {
-    return QueryResponse(
-      transaction: transaction ?? this.transaction,
+  QueryResponse<T> copyWith({T? data, String? error}) {
+    return QueryResponse<T>(
+      data: data ?? this.data,
       error: error ?? this.error,
     );
   }

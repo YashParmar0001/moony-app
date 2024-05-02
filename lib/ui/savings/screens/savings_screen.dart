@@ -6,6 +6,7 @@ import 'package:moony_app/controller/savings_controller.dart';
 import 'package:moony_app/theme/colors.dart';
 import 'package:moony_app/ui/savings/screens/add_goal_screen.dart';
 import 'package:moony_app/ui/savings/widgets/goal_card.dart';
+import 'package:moony_app/ui/savings/widgets/no_savings.dart';
 import 'package:moony_app/ui/savings/widgets/savings_stats_card.dart';
 
 class SavingsScreen extends StatefulWidget {
@@ -68,7 +69,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
             Obx(() {
               final list = savingsController.savings;
               if (list.isEmpty) {
-                return const Text('Empty');
+                return const NoSavings();
               } else {
                 return SizedBox(
                   height: 200,

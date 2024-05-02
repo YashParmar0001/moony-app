@@ -143,7 +143,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     if (response.error == null) {
       Get.back();
       Get.off(
-        TransactionDetailsScreen(transaction: response.transaction!),
+        () => TransactionDetailsScreen(transaction: response.data!),
         preventDuplicates: false,
       );
       Get.snackbar(

@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:moony_app/controller/current_saving_history_controller.dart';
+import 'package:moony_app/controller/savings_controller.dart';
 import 'package:moony_app/generated/assets.dart';
+import 'package:moony_app/model/saving.dart';
 import 'package:moony_app/ui/savings/screens/history_detail_screen.dart';
-import 'package:moony_app/ui/savings/screens/money_in_screen.dart';
-import 'package:moony_app/ui/savings/screens/money_out_screen.dart';
+import 'package:moony_app/ui/savings/screens/save_history_screen.dart';
+import 'package:moony_app/model/saving_history.dart' as sh;
+import 'package:moony_app/ui/savings/widgets/no_history.dart';
 
 import '../../../theme/colors.dart';
 
 class SavingHistory extends StatefulWidget {
-  const SavingHistory({super.key});
+  const SavingHistory({super.key, required this.saving});
+
+  final Saving saving;
 
   @override
   State<SavingHistory> createState() => _SavingHistoryState();
@@ -19,29 +26,58 @@ class _SavingHistoryState extends State<SavingHistory> {
 
   @override
   Widget build(BuildContext context) {
+    final history = widget.saving.history;
     return Scaffold(
-      body: ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) => const _HistoryCard(),
-      ),
+      body: (history.isEmpty)
+          ? const Center(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: 50,
+                ),
+                child: NoHistory(),
+              ),
+            )
+          : ListView.builder(
+              itemCount: history.length,
+              itemBuilder: (context, index) => _HistoryCard(
+                history: history[index],
+              ),
+            ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (showOptions)
             FloatingActionButton(
-              onPressed: () => Get.to(() => const MoneyInScreen()),
+              heroTag: 'money_in',
+              onPressed: () => Get.to(
+                () => SaveHistoryScreen(
+                  currentSavingHistoryController:
+                      CurrentSavingHistoryController(),
+                  moneyIn: true,
+                  saving: widget.saving,
+                ),
+              ),
               backgroundColor: AppColors.spiroDiscoBall,
               child: const Icon(Icons.add, color: AppColors.white),
             ),
           const SizedBox(height: 10),
           if (showOptions)
             FloatingActionButton(
-              onPressed: () => Get.to(() => const MoneyOutScreen()),
+              heroTag: 'money_out',
+              onPressed: () => Get.to(
+                () => SaveHistoryScreen(
+                  currentSavingHistoryController:
+                      CurrentSavingHistoryController(),
+                  moneyIn: false,
+                  saving: widget.saving,
+                ),
+              ),
               backgroundColor: AppColors.spiroDiscoBall,
               child: const Icon(Icons.remove, color: AppColors.white),
             ),
           const SizedBox(height: 10),
           FloatingActionButton(
+            heroTag: 'show_options',
             onPressed: () {
               setState(() {
                 showOptions = !showOptions;
@@ -61,7 +97,9 @@ class _SavingHistoryState extends State<SavingHistory> {
 }
 
 class _HistoryCard extends StatelessWidget {
-  const _HistoryCard({super.key});
+  const _HistoryCard({super.key, required this.history});
+
+  final sh.SavingHistory history;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +138,9 @@ class _HistoryCard extends StatelessWidget {
                 SizedBox(
                   width: 35,
                   child: Image.asset(
-                    Assets.iconsMoneyIn,
+                    history.moneyIn
+                        ? Assets.iconsMoneyIn
+                        : Assets.iconsMoneyOut,
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -108,23 +148,25 @@ class _HistoryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Money in',
-                      style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      history.moneyIn ? 'Money in' : 'Money out',
+                      style:
+                          Theme.of(context).textTheme.displayMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                     ),
                     Text(
-                      '24/08/2004',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            color: AppColors.midSlateBlue,
-                          ),
+                      DateFormat('dd/MM/y').format(history.date),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                color: AppColors.midSlateBlue,
+                              ),
                     ),
                   ],
                 ),
               ],
             ),
             Text(
-              '2000',
+              history.amount.toString(),
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

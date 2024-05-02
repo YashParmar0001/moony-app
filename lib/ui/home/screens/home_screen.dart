@@ -37,35 +37,33 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const MonthlyStatusCard(),
-            const SizedBox(height: 10),
-            Obx(() {
-              List<Transaction> list = transactionController.transactions;
-              if (list.isEmpty) {
-                return const Center(
-                  child: NoTransactions(),
-                );
-              } else {
-                if (filterOption == 'income') {
-                  list = list.where((e) => e.category.isIncome).toList();
-                } else if (filterOption == 'expenses') {
-                  list = list.where((e) => !e.category.isIncome).toList();
-                }
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: list.length,
-                    itemBuilder: (context, index) {
-                      return TransactionCard(transaction: list[index]);
-                    },
-                  ),
-                );
+      body: Column(
+        children: [
+          const MonthlyStatusCard(),
+          const SizedBox(height: 10),
+          Obx(() {
+            List<Transaction> list = transactionController.transactions;
+            if (list.isEmpty) {
+              return const Center(
+                child: NoTransactions(),
+              );
+            } else {
+              if (filterOption == 'income') {
+                list = list.where((e) => e.category.isIncome).toList();
+              } else if (filterOption == 'expenses') {
+                list = list.where((e) => !e.category.isIncome).toList();
               }
-            }),
-          ],
-        ),
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (context, index) {
+                    return TransactionCard(transaction: list[index]);
+                  },
+                ),
+              );
+            }
+          }),
+        ],
       ),
     );
   }

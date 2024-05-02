@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:moony_app/controller/savings_controller.dart';
 
 import '../../../theme/colors.dart';
 
@@ -7,6 +9,8 @@ class SavingsStatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final savingsController = Get.find<SavingsController>();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(
@@ -29,9 +33,27 @@ class SavingsStatsCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            _buildStat(context, 'Goals', 0),
-            _buildStat(context, 'In Progress', 0),
-            _buildStat(context, 'Completed', 0),
+            Obx(
+              () => _buildStat(
+                context,
+                'Goals',
+                savingsController.goal,
+              ),
+            ),
+            Obx(
+              () => _buildStat(
+                context,
+                'In Progress',
+                savingsController.inProgress,
+              ),
+            ),
+            Obx(
+              () => _buildStat(
+                context,
+                'Completed',
+                savingsController.completed,
+              ),
+            ),
           ],
         ),
       ),
@@ -40,9 +62,9 @@ class SavingsStatsCard extends StatelessWidget {
 
   Widget _buildStat(BuildContext context, String label, int data) {
     final style = Theme.of(context).textTheme.displayMedium?.copyWith(
-      color: AppColors.white,
-      fontFamily: 'Nimbus-Medium',
-    );
+          color: AppColors.white,
+          fontFamily: 'Nimbus-Medium',
+        );
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20,

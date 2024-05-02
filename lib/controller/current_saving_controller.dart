@@ -5,6 +5,8 @@ import 'package:moony_app/model/category_icon.dart';
 import 'package:moony_app/model/saving.dart';
 import 'package:moony_app/service/sqlite_service.dart';
 
+import '../model/query_response.dart';
+
 class CurrentSavingController extends GetxController {
   final _title = ''.obs;
   final _amount = 0.obs;
@@ -72,6 +74,42 @@ class CurrentSavingController extends GetxController {
     }
   }
 
+  Future<QueryResponse<Saving>> updateSaving(int id) async {
+    QueryResponse<Saving> queryResponse = const QueryResponse<Saving>(
+      data: null,
+      error: null,
+    );
+    if (!validate()) {
+      return queryResponse.copyWith(
+        error: 'Please fill the details properly!',
+      );
+    }
+
+    final service = Get.find<SqliteService>();
+
+    try {
+      final saving = Saving(
+        id: id,
+        date: dueDate!,
+        desiredAmount: amount,
+        icon: icon!,
+        title: title,
+        history: [],
+      );
+      // dev.log('Updating transaction: $transaction', name: 'Transaction');
+      final response = await service.updateSaving(saving);
+
+      if (response == 0) {
+        return queryResponse.copyWith(error: 'Something went wrong!');
+      } else {
+        // reset();
+        return queryResponse.copyWith(data: saving);
+      }
+    } catch (_) {
+      return queryResponse.copyWith(error: 'Something went wrong!');
+    }
+  }
+
   bool validateTitle() {
     if (title.isEmpty) {
       _titleError.value = 'Title cannot be empty!';
@@ -97,5 +135,12 @@ class CurrentSavingController extends GetxController {
     if (!validateAmount()) return false;
 
     return true;
+  }
+
+  void populate(Saving saving) {
+    title = saving.title;
+    amount = saving.desiredAmount;
+    dueDate = saving.date;
+    icon = saving.icon;
   }
 }

@@ -83,7 +83,7 @@ class SavingGoalView extends StatelessWidget {
           ),
           const SizedBox(height: 30),
           Text(
-            'Remaining',
+            (saving.remainingMoney.isNegative) ? 'Redundancy' : 'Remaining',
             style: Theme.of(context).textTheme.displayLarge?.copyWith(
                   fontFamily: 'Nimbus-Medium',
                   color: AppColors.midSlateBlue,
@@ -93,7 +93,10 @@ class SavingGoalView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _Data(label: 'Money', data: saving.remainingMoney.toString()),
+              _Data(
+                label: 'Money',
+                data: saving.remainingMoney.abs().toString(),
+              ),
               _Data(label: 'Time', data: '${saving.remainingDays} day'),
             ],
           ),

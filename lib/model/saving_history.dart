@@ -40,10 +40,10 @@ class SavingHistory {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'savingId': savingId,
-      'moneyIn': moneyIn,
-      'date': date,
+      // 'id': id,
+      'saving_id': savingId,
+      'money_in': moneyIn ? 1 : 0,
+      'date': date.millisecondsSinceEpoch,
       'amount': amount,
       'description': description,
     };
@@ -51,10 +51,10 @@ class SavingHistory {
 
   factory SavingHistory.fromMap(Map<String, dynamic> map) {
     return SavingHistory(
-      id: map['id'] as int,
-      savingId: map['savingId'] as int,
-      moneyIn: map['moneyIn'] as bool,
-      date: map['date'] as DateTime,
+      id: map['history_id'] as int,
+      savingId: map['saving_id'] as int,
+      moneyIn: (map['money_in'] as int) == 1 ? true : false,
+      date: DateTime.fromMillisecondsSinceEpoch(map['date']),
       amount: map['amount'] as int,
       description: map['description'] as String,
     );

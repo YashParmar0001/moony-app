@@ -4,6 +4,7 @@ import 'package:moony_app/core/data/initial_data.dart';
 import 'package:moony_app/model/category.dart';
 import 'package:moony_app/model/category_icon.dart';
 import 'package:moony_app/model/saving.dart';
+import 'package:moony_app/model/saving_history.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:moony_app/model/transaction.dart' as t;
@@ -87,6 +88,16 @@ class SqliteService {
     return response;
   }
 
+  Future<int> deleteSaving(int id) async {
+    final Database db = await initializeDB();
+    final response = db.delete(
+      'savings',
+      where: 'saving_id = ?',
+      whereArgs: [id],
+    );
+    return response;
+  }
+
   Future<int> updateTransaction(t.Transaction transaction) async {
     dev.log('Update transaction: $transaction', name: 'Transaction');
     final Database db = await initializeDB();
@@ -100,6 +111,19 @@ class SqliteService {
     return id;
   }
 
+  Future<int> updateSaving(Saving saving) async {
+    dev.log('Update saving: $saving', name: 'Saving');
+    final Database db = await initializeDB();
+    final id = await db.update(
+      'savings',
+      saving.toMap(),
+      where: 'saving_id = ?',
+      whereArgs: [saving.id],
+    );
+    dev.log('Updated saving: $id', name: 'Saving');
+    return id;
+  }
+
   Future<int> addSaving(Saving saving) async {
     final Database db = await initializeDB();
     final id = await db.insert(
@@ -108,6 +132,20 @@ class SqliteService {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     dev.log('Inserted saving: $id', name: 'Saving');
+    return id;
+  }
+
+  Future<int> addSavingHistory(SavingHistory history) async {
+    final Database db = await initializeDB();
+    final id = await db.insert(
+      'saving_history',
+      history.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    dev.log(
+      'Inserted saving history: saving id: ${history.savingId} | Id: ${history.id}',
+      name: 'Saving',
+    );
     return id;
   }
 
@@ -189,6 +227,16 @@ class SqliteService {
       return Saving.fromMap(map);
     }).toList();
     return list;
+  }
+
+  Future<List<SavingHistory>> getSavingHistory(int savingId) async {
+    final db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from saving_history '
+      'where saving_id = $savingId',
+    );
+    dev.log('Saving history query: $queryResult', name: 'Saving');
+    return queryResult.map((e) => SavingHistory.fromMap(e)).toList();
   }
 
   Future<List<Category>> getCategories() async {

@@ -78,8 +78,8 @@ class CurrentTransactionController extends GetxController {
   }
 
   Future<QueryResponse> updateTransaction(int id) async {
-    QueryResponse queryResponse = const QueryResponse(
-      transaction: null,
+    QueryResponse queryResponse = const QueryResponse<Transaction>(
+      data: null,
       error: null,
     );
     if (!validate()) {
@@ -107,7 +107,7 @@ class CurrentTransactionController extends GetxController {
         return queryResponse.copyWith(error: 'Something went wrong!');
       } else {
         // reset();
-        return queryResponse.copyWith(transaction: transaction);
+        return queryResponse.copyWith(data: transaction);
       }
     } catch (_) {
       return queryResponse.copyWith(error: 'Something went wrong!');
