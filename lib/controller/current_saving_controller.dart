@@ -6,12 +6,14 @@ import 'package:moony_app/model/saving.dart';
 import 'package:moony_app/service/sqlite_service.dart';
 
 import '../model/query_response.dart';
+import '../model/saving_history.dart';
 
 class CurrentSavingController extends GetxController {
   final _title = ''.obs;
   final _amount = 0.obs;
   final _dueDate = Rx<DateTime?>(null);
   final _icon = Rx<CategoryIcon?>(null);
+  late List<SavingHistory> history;
 
   final _titleError = Rx<String?>(null);
   final _amountError = Rx<String?>(null);
@@ -94,7 +96,7 @@ class CurrentSavingController extends GetxController {
         desiredAmount: amount,
         icon: icon!,
         title: title,
-        history: [],
+        history: history,
       );
       // dev.log('Updating transaction: $transaction', name: 'Transaction');
       final response = await service.updateSaving(saving);
@@ -142,5 +144,6 @@ class CurrentSavingController extends GetxController {
     amount = saving.desiredAmount;
     dueDate = saving.date;
     icon = saving.icon;
+    history = saving.history;
   }
 }
