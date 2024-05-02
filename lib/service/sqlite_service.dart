@@ -90,8 +90,18 @@ class SqliteService {
 
   Future<int> deleteSaving(int id) async {
     final Database db = await initializeDB();
-    final response = db.delete(
+    final response = await db.delete(
       'savings',
+      where: 'saving_id = ?',
+      whereArgs: [id],
+    );
+    return response;
+  }
+
+  Future<int> deleteSavingHistory(int id) async {
+    final Database db = await initializeDB();
+    final response = await db.delete(
+      'saving_history',
       where: 'saving_id = ?',
       whereArgs: [id],
     );

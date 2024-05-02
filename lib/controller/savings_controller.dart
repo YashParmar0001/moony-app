@@ -58,6 +58,7 @@ class SavingsController extends GetxController {
 
   Future<bool> deleteSaving(int id) async {
     final count = await service.deleteSaving(id);
-    return count >= 1;
+    final historyCount = await service.deleteSavingHistory(id);
+    return count >= 1 && historyCount >= 1;
   }
 }
