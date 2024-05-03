@@ -40,7 +40,15 @@ class Saving {
 
   int get percentage {
     int per = (savedMoney * 100) ~/ desiredAmount;
-    return per <= 100 ? per : 100;
+    if (per <= 100) {
+      if (per > 0) {
+        return per;
+      } else {
+        return 0;
+      }
+    }else {
+      return 100;
+    }
   }
 
   @override

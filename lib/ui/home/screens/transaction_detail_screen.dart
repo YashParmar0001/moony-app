@@ -72,7 +72,8 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${widget.transaction.category.isIncome ? '' : '-'}${widget.transaction.money}',
+                  '${widget.transaction.category.isIncome ? '' : '-'}'
+                  '${widget.transaction.money}',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                         fontFamily: 'Nimbus-Medium',
                       ),
@@ -86,28 +87,29 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
               ],
             ),
           ),
-          Positioned(
-            bottom: 5,
-            right: 50,
-            child: IconButton.filled(
-              onPressed: () {
-                Get.to(
-                  () => EditTransactionScreen(
-                    currentTransactionController:
-                        CurrentTransactionController(),
-                    transaction: widget.transaction,
+          if (widget.transaction.category.name != 'Saving')
+            Positioned(
+              bottom: 5,
+              right: 50,
+              child: IconButton.filled(
+                onPressed: () {
+                  Get.to(
+                    () => EditTransactionScreen(
+                      currentTransactionController:
+                          CurrentTransactionController(),
+                      transaction: widget.transaction,
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.edit),
+                iconSize: 30,
+                style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                    AppColors.spiroDiscoBall,
                   ),
-                );
-              },
-              icon: const Icon(Icons.edit),
-              iconSize: 30,
-              style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(
-                  AppColors.spiroDiscoBall,
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -176,8 +178,11 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
   }
 
   Future<void> _deleteTransaction() async {
-    final response =
-        await transactionsController.deleteTransaction(widget.transaction.id);
+    final response = await transactionsController.deleteTransaction(
+      widget.transaction.id,
+      widget.transaction.historyId,
+    );
+    Get.closeAllSnackbars();
     if (response) {
       Get.back();
       Get.snackbar(

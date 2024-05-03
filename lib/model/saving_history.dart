@@ -5,6 +5,7 @@ class SavingHistory {
   final DateTime date;
   final int amount;
   final String description;
+  final int? transactionId;
 
   const SavingHistory({
     required this.id,
@@ -13,11 +14,12 @@ class SavingHistory {
     required this.date,
     required this.amount,
     required this.description,
+    this.transactionId,
   });
 
   @override
   String toString() {
-    return 'SavingHistory{ id: $id, savingId: $savingId, moneyIn: $moneyIn, date: $date, amount: $amount, description: $description,}';
+    return 'SavingHistory{ id: $id, savingId: $savingId, moneyIn: $moneyIn, date: $date, amount: $amount, description: $description, transactionId: $transactionId}';
   }
 
   SavingHistory copyWith({
@@ -27,6 +29,7 @@ class SavingHistory {
     DateTime? date,
     int? amount,
     String? description,
+    int? transactionId,
   }) {
     return SavingHistory(
       id: id ?? this.id,
@@ -35,6 +38,7 @@ class SavingHistory {
       date: date ?? this.date,
       amount: amount ?? this.amount,
       description: description ?? this.description,
+      transactionId: transactionId ?? this.transactionId,
     );
   }
 
@@ -46,6 +50,7 @@ class SavingHistory {
       'date': date.millisecondsSinceEpoch,
       'amount': amount,
       'description': description,
+      'tran_id' : transactionId,
     };
   }
 
@@ -57,6 +62,7 @@ class SavingHistory {
       date: DateTime.fromMillisecondsSinceEpoch(map['date']),
       amount: map['amount'] as int,
       description: map['description'] as String,
+      transactionId: map['tran_id'],
     );
   }
 }

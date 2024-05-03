@@ -112,6 +112,7 @@ class _UpdateHistoryScreenState extends State<UpdateHistoryScreen> {
     final savings = Get.find<SavingsController>().savings;
     final response = await currentSavingHistoryController.updateSavingHistory(
       widget.history.id,
+      widget.history.transactionId,
       savings.where((e) => e.id == widget.history.savingId).first,
       widget.history.moneyIn,
     );

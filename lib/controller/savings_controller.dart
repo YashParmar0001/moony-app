@@ -29,7 +29,7 @@ class SavingsController extends GetxController {
   void calculateStats() {
     int inProgress = 0, completed = 0;
     for (Saving saving in savings) {
-      if (saving.remainingMoney == 0) {
+      if (saving.percentage == 100) {
         completed++;
       } else {
         inProgress++;
@@ -63,16 +63,23 @@ class SavingsController extends GetxController {
     return count >= 1 && historyCount >= 1;
   }
 
-  Future<QueryResponse<Saving>> deleteSavingHistory(int id, Saving saving,) async {
+  Future<QueryResponse<Saving>> deleteSavingHistory(
+    int id,
+    int? transactionId,
+    Saving saving,
+  ) async {
     const queryResponse = QueryResponse<Saving>(data: null, error: null);
     final count = await service.deleteSavingHistoryById(id);
     if (count >= 1) {
+      if (transactionId != null) {
+        await service.deleteTransaction(transactionId);
+      }
       return queryResponse.copyWith(
         data: saving.copyWith(
           history: saving.history..removeWhere((e) => e.id == id),
         ),
       );
-    }else {
+    } else {
       return queryResponse.copyWith(error: 'Something went wrong!');
     }
   }

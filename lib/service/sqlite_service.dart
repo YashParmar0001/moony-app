@@ -23,7 +23,8 @@ class SqliteService {
           "money INTEGER, "
           "category_id INTEGER, "
           "note TEXT, "
-          "date INTEGER"
+          "date INTEGER, "
+          "history_id INTEGER NULL"
           ")",
         );
         await database.execute(
@@ -57,7 +58,8 @@ class SqliteService {
           "money_in INTEGER, "
           "date INTEGER, "
           "amount INTEGER, "
-          "description TEXT"
+          "description TEXT, "
+          "tran_id INTEGER NULL"
           ")",
         );
         await populateCategories(database);
@@ -150,8 +152,8 @@ class SqliteService {
     final id = await db.update(
       'saving_history',
       history.toMap(),
-      where: 'saving_id = ?',
-      whereArgs: [history.savingId],
+      where: 'history_id = ?',
+      whereArgs: [history.id],
     );
     dev.log('Updated saving history: saving id: ${history.savingId} | id: $id');
     return id;
@@ -230,12 +232,42 @@ class SqliteService {
         },
         'note': e['note'],
         'date': e['date'],
+        'history_id': e['history_id'],
       };
       // dev.log('Map: $map', name: 'Transaction');
       return t.Transaction.fromMap(map);
     }).toList();
     // dev.log('Final result: $list', name: 'Transaction');
     return list;
+  }
+
+  Future<t.Transaction> getTransaction(int id) async {
+    final Database db = await initializeDB();
+    final queryResult = await db.rawQuery(
+      'select * from transactions '
+      'join category on transactions.category_id = category.category_id '
+      'join category_icon on category.icon_id = category_icon.icon_id '
+      'where tran_id = $id',
+    );
+    final transactionMap = queryResult.first;
+    final map = {
+      'tran_id': transactionMap['tran_id'],
+      'money': transactionMap['money'],
+      'category': {
+        'category_id': transactionMap['category_id'],
+        'is_income': transactionMap['is_income'],
+        'name': transactionMap['name'],
+        'icon': {
+          'icon_id': transactionMap['icon_id'],
+          'icon_category': transactionMap['icon_category'],
+          'icon': transactionMap['icon'],
+        },
+      },
+      'note': transactionMap['note'],
+      'date': transactionMap['date'],
+      'history_id': transactionMap['history_id'],
+    };
+    return t.Transaction.fromMap(map);
   }
 
   Future<List<Saving>> getSavings() async {

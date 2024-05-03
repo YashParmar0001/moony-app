@@ -2,6 +2,7 @@ import 'dart:developer' as dev;
 
 import 'package:get/get.dart';
 import 'package:moony_app/model/query_response.dart';
+import 'package:moony_app/model/transaction.dart';
 import 'package:moony_app/service/sqlite_service.dart';
 
 import '../model/saving.dart';
@@ -75,6 +76,7 @@ class CurrentSavingHistoryController extends GetxController {
 
   Future<QueryResponse<Saving>> updateSavingHistory(
     int id,
+    int? transactionId,
     Saving saving,
     bool moneyIn,
   ) async {
@@ -98,6 +100,7 @@ class CurrentSavingHistoryController extends GetxController {
         description: description,
         moneyIn: moneyIn,
         date: date!,
+        transactionId: transactionId,
       );
 
       final response = await service.updateSavingHistory(savingHistory);
@@ -105,6 +108,19 @@ class CurrentSavingHistoryController extends GetxController {
       if (response == 0) {
         return queryResponse.copyWith(error: 'Something went wrong!');
       } else {
+        if (transactionId != null) {
+          final transaction = await service.getTransaction(transactionId);
+          await service.updateTransaction(
+            Transaction(
+              id: transaction.id,
+              money: amount,
+              category: transaction.category,
+              note: transaction.note,
+              date: date!,
+              historyId: response,
+            ),
+          );
+        }
         final updatedSaving = await service.getSaving(saving.id);
         return queryResponse.copyWith(data: updatedSaving);
       }

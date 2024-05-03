@@ -78,8 +78,15 @@ class TransactionController extends GetxController {
     dev.log('Fetched transactions', name: 'Transaction');
   }
 
-  Future<bool> deleteTransaction(int id) async {
+  Future<bool> deleteTransaction(int id, int? historyId) async {
     final count = await service.deleteTransaction(id);
-    return count >= 1;
+    if (count >= 1) {
+      if (historyId != null) {
+        await service.deleteSavingHistoryById(historyId);
+      }
+      return true;
+    }else {
+      return false;
+    }
   }
 }

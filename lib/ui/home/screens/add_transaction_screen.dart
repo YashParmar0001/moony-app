@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moony_app/controller/current_transaction_controller.dart';
@@ -9,6 +11,9 @@ import 'package:moony_app/ui/home/widgets/date_field.dart';
 import 'package:moony_app/ui/home/widgets/money_field.dart';
 import 'package:moony_app/ui/home/widgets/notes_field.dart';
 import 'package:moony_app/ui/home/widgets/simple_app_bar.dart';
+
+import '../../../controller/savings_controller.dart';
+import '../../../model/saving.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   const AddTransactionScreen({
@@ -106,6 +111,59 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           },
                         ),
                       ),
+                      Obx(() {
+                        final category = currentTransactionController.category;
+                        if (category != null && category.name == 'Saving') {
+                          final savings = Get.find<SavingsController>().savings;
+                          if (savings.isEmpty) return const SizedBox();
+
+                          currentTransactionController.saving = savings.first;
+
+                          dev.log('Savings: $savings', name: 'TransactionSavings');
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 5,
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.savings_outlined,
+                                  color: AppColors.spiroDiscoBall,
+                                  size: 30,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: DropdownButtonFormField<int>(
+                                    value: savings.first.id,
+                                    items: List.generate(
+                                      savings.length,
+                                      (index) => DropdownMenuItem(
+                                        value: savings[index].id,
+                                        child: Text(
+                                          savings[index].title,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium,
+                                        ),
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      if (value != null) {
+                                        currentTransactionController.saving =
+                                            savings
+                                                .where((e) => e.id == value)
+                                                .first;
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
+                      }),
                       const SizedBox(height: 10),
                       NotesField(controller: noteController),
                       const SizedBox(height: 20),

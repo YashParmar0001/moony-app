@@ -178,6 +178,7 @@ class _HistoryDetailsScreenState extends State<HistoryDetailsScreen> {
     final savings = savingsController.savings;
     final response = await savingsController.deleteSavingHistory(
       widget.history.id,
+      widget.history.transactionId,
       savings.where((e) => e.id == widget.history.savingId).first,
     );
     Get.closeAllSnackbars();
