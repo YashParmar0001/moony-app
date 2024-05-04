@@ -13,6 +13,19 @@ class CategoriesController extends GetxController {
     _categories.value = await dbService.getCategories();
   }
 
+  Future<String?> addCategory(Category category) async {
+    try {
+      final response = await dbService.addCategory(category);
+      if (response == 0) {
+        return 'Something went wrong!';
+      }else {
+        return null;
+      }
+    }catch(_) {
+      return 'Something went wrong!';
+    }
+  }
+
   Future<String?> deleteCategory(int id) async {
     try {
       final response = await dbService.deleteCategory(id);
