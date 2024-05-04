@@ -97,67 +97,13 @@ class _ChartCardState extends State<ChartCard> {
           Obx(
             () {
               final chartItems = chartController.getCombinedChartItems();
-              if (chartItems.isEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 20,
-                  ),
-                  child: Center(
-                    child: Text(
-                      'No data to display',
-                      style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        color: AppColors.charcoal,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Inter'
-                      ),
-                    ),
-                  ),
-                );
-              } else {
-                return Row(
-                  children: [
-                    _buildChart(context, chartItems),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        clipBehavior: Clip.none,
-                        itemCount: chartItems.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 10,
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 25,
-                                  height: 25,
-                                  decoration: ShapeDecoration(
-                                    shape: CircleBorder(
-                                      side: BorderSide(
-                                        width: 2,
-                                        color: colorPalette[index],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Text(
-                                  chartItems[index].category.name,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              }
+              return Row(
+                children: [
+                  _buildChart(chartItems),
+                  const SizedBox(width: 10),
+                  _buildChartLegends(chartItems),
+                ],
+              );
             },
           ),
           const SizedBox(height: 10),
@@ -178,37 +124,120 @@ class _ChartCardState extends State<ChartCard> {
     );
   }
 
-  Widget _buildChart(BuildContext context, List<ChartItem> chartItems) {
-    return SizedBox(
-      width: 200,
-      height: 200,
-      child: SfCircularChart(
-        palette: colorPalette,
-        annotations: [
-          CircularChartAnnotation(
-            widget: GestureDetector(
-              onTap: () {
-                dev.log('Change mode', name: 'Chart');
-                chartController.changeMode();
+  Widget _buildChart(List<ChartItem> chartItems) {
+    if (chartItems.isEmpty) {
+      return SizedBox(
+        width: 200,
+        height: 200,
+        child: SfCircularChart(
+          palette: const [AppColors.graniteGrey],
+          annotations: [
+            CircularChartAnnotation(
+              widget: GestureDetector(
+                onTap: chartController.changeMode,
+                child: Text(
+                  '${(chartController.showExpense ? 'Expenses' : 'Income')}\n'
+                  '${chartController.totalExpense}',
+                  style: Theme.of(context).textTheme.displaySmall,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+          series: <CircularSeries<int, String>>[
+            DoughnutSeries<int, String>(
+              dataSource: const [10],
+              xValueMapper: (data, _) => 'No Items',
+              yValueMapper: (data, _) => data,
+              name: 'Expenses',
+              innerRadius: '80%',
+              radius: '100%',
+            ),
+          ],
+        ),
+      );
+    } else {
+      return SizedBox(
+        width: 200,
+        height: 200,
+        child: SfCircularChart(
+          palette: colorPalette,
+          annotations: [
+            CircularChartAnnotation(
+              widget: GestureDetector(
+                onTap: () {
+                  dev.log('Change mode', name: 'Chart');
+                  chartController.changeMode();
+                },
+                child: Text(
+                  '${(chartController.showExpense ? 'Expenses' : 'Income')}\n'
+                  '${chartController.totalExpense}',
+                  style: Theme.of(context).textTheme.displaySmall,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+          tooltipBehavior: TooltipBehavior(enable: true),
+          series: <CircularSeries<ChartItem, String>>[
+            DoughnutSeries<ChartItem, String>(
+              dataSource: chartItems,
+              xValueMapper: (data, _) => data.category.name,
+              yValueMapper: (data, _) => data.amount,
+              name: 'Expenses',
+              innerRadius: '80%',
+              radius: '100%',
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget _buildChartLegends(List<ChartItem> chartItems) {
+    return chartItems.isEmpty
+        ? _buildLegend(
+            AppColors.midSlateBlue,
+            'No Item',
+          )
+        : Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              clipBehavior: Clip.none,
+              itemCount: chartItems.length,
+              itemBuilder: (context, index) {
+                return _buildLegend(
+                  colorPalette[index],
+                  chartItems[index].category.name,
+                );
               },
-              child: Text(
-                '${(chartController.showExpense ? 'Expenses' : 'Income')}\n'
-                '${chartController.totalExpense}',
-                style: Theme.of(context).textTheme.displaySmall,
-                textAlign: TextAlign.center,
+            ),
+          );
+  }
+
+  Widget _buildLegend(Color color, String categoryName) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        bottom: 10,
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 25,
+            height: 25,
+            decoration: ShapeDecoration(
+              shape: CircleBorder(
+                side: BorderSide(
+                  width: 2,
+                  color: color,
+                ),
               ),
             ),
           ),
-        ],
-        tooltipBehavior: TooltipBehavior(enable: true),
-        series: <CircularSeries<ChartItem, String>>[
-          DoughnutSeries<ChartItem, String>(
-            dataSource: chartItems,
-            xValueMapper: (data, _) => data.category.name,
-            yValueMapper: (data, _) => data.amount,
-            name: 'Expenses',
-            innerRadius: '80%',
-            radius: '100%',
+          const SizedBox(width: 10),
+          Text(
+            categoryName,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ],
       ),

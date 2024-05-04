@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:moony_app/controller/current_saving_history_controller.dart';
 import 'package:moony_app/controller/savings_controller.dart';
+import 'package:moony_app/controller/settings_controller.dart';
 import 'package:moony_app/generated/assets.dart';
 import 'package:moony_app/model/saving_history.dart';
 import 'package:moony_app/theme/colors.dart';
@@ -25,6 +26,8 @@ class HistoryDetailsScreen extends StatefulWidget {
 class _HistoryDetailsScreenState extends State<HistoryDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    final settingsController = Get.find<SettingsController>();
+
     return Scaffold(
       appBar: SimpleAppBar(
         title: 'History Details',
@@ -66,7 +69,8 @@ class _HistoryDetailsScreenState extends State<HistoryDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${widget.history.moneyIn ? '' : '-'}${widget.history.amount}',
+                    '${widget.history.moneyIn ? '' : '-'}${widget.history.amount}'
+                    '${settingsController.currency}',
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                           fontFamily: 'Nimbus-Medium',
                         ),

@@ -1,5 +1,3 @@
-import 'package:moony_app/model/transaction.dart';
-
 class QueryResponse<T> {
   const QueryResponse({required this.data, required this.error});
 

@@ -43,6 +43,7 @@ dependencies:
   liquid_progress_indicator_v2: ^0.5.0
   collection: ^1.18.0
   syncfusion_flutter_charts: ^25.1.42+1
+  shared_preferences: ^2.2.3
 
   # Database
   sqflite: ^2.3.3
@@ -116,4 +117,5 @@ flutter:
     - assets/category_icons/entertainment/
     - assets/category_icons/transportation/
     - assets/icons/
+    - assets/
 

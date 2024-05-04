@@ -2,6 +2,8 @@
 class Assets {
   Assets._();
 
+  static const String assetsMoonyLogo = 'assets/moony-logo.png';
+  static const String assetsMoonyLogoNoBg = 'assets/moony-logo-no-bg.png';
   static const String educationArt = 'assets/category_icons/education/art.png';
   static const String educationBook = 'assets/category_icons/education/book.png';
   static const String educationGuitar = 'assets/category_icons/education/guitar.png';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:moony_app/controller/settings_controller.dart';
 import 'package:moony_app/model/saving.dart';
 import 'package:moony_app/theme/colors.dart';
 import 'package:moony_app/ui/savings/screens/savings_detail_screen.dart';
@@ -12,6 +13,8 @@ class GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsController = Get.find<SettingsController>();
+
     return GestureDetector(
       onTap: () => Get.to(() => SavingsDetailScreen(saving: saving)),
       child: Container(
@@ -68,7 +71,7 @@ class GoalCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    saving.desiredAmount.toString(),
+                    '${saving.desiredAmount}${settingsController.currency}',
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           fontFamily: 'Nimbus-Medium',
                           color: AppColors.charcoal,

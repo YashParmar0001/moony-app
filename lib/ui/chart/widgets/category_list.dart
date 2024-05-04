@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moony_app/controller/chart_controller.dart';
+import 'package:moony_app/controller/settings_controller.dart';
 
 import '../../../generated/assets.dart';
 import '../../../theme/colors.dart';
@@ -11,6 +12,7 @@ class CategoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final chartController = Get.find<ChartController>();
+    final settingsController = Get.find<SettingsController>();
 
     return Obx(
       () => Expanded(
@@ -46,7 +48,8 @@ class CategoryList extends StatelessWidget {
                   Row(
                     children: [
                       Image.asset(
-                        chartController.chartItems[index].category.icon.iconPath,
+                        chartController
+                            .chartItems[index].category.icon.iconPath,
                         width: 45,
                       ),
                       const SizedBox(width: 5),
@@ -61,7 +64,8 @@ class CategoryList extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    chartController.chartItems[index].amount.toString(),
+                    '${chartController.chartItems[index].amount}'
+                    '${settingsController.currency}',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           color: AppColors.charcoal,
                           fontWeight: FontWeight.w700,

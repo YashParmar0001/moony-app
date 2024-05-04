@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:moony_app/controller/settings_controller.dart';
 import 'package:moony_app/controller/transaction_controller.dart';
 import 'package:moony_app/theme/colors.dart';
 
@@ -14,6 +15,7 @@ class MonthlyStatusCard extends StatefulWidget {
 
 class _MonthlyStatusCardState extends State<MonthlyStatusCard> {
   final transactionController = Get.find<TransactionController>();
+  final settingsController = Get.find<SettingsController>();
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +85,7 @@ class _MonthlyStatusCardState extends State<MonthlyStatusCard> {
               () => _buildData(
                 context,
                 'Income:',
-                transactionController.income.toString(),
+                '${transactionController.income}${settingsController.currency}',
                 true,
               ),
             ),
@@ -92,7 +94,7 @@ class _MonthlyStatusCardState extends State<MonthlyStatusCard> {
               () => _buildData(
                 context,
                 'Expenses:',
-                transactionController.expenses.toString(),
+                '${transactionController.expenses}${settingsController.currency}',
                 true,
               ),
             ),
@@ -101,7 +103,7 @@ class _MonthlyStatusCardState extends State<MonthlyStatusCard> {
               () => _buildData(
                 context,
                 'Your Balance',
-                transactionController.balance.toString(),
+                '${transactionController.balance}${settingsController.currency}',
                 false,
               ),
             ),

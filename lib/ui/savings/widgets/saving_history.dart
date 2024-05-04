@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:moony_app/controller/current_saving_history_controller.dart';
 import 'package:moony_app/controller/savings_controller.dart';
+import 'package:moony_app/controller/settings_controller.dart';
 import 'package:moony_app/generated/assets.dart';
 import 'package:moony_app/model/saving.dart';
 import 'package:moony_app/ui/savings/screens/history_detail_screen.dart';
@@ -103,6 +104,8 @@ class _HistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsController = Get.find<SettingsController>();
+
     return GestureDetector(
       onTap: () => Get.to(() => HistoryDetailsScreen(history: history)),
       child: Container(
@@ -166,7 +169,7 @@ class _HistoryCard extends StatelessWidget {
               ],
             ),
             Text(
-              history.amount.toString(),
+              '${history.amount}${settingsController.currency}',
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

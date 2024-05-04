@@ -3,6 +3,7 @@ import 'package:moony_app/controller/categories_controller.dart';
 import 'package:moony_app/controller/chart_controller.dart';
 import 'package:moony_app/controller/icons_controller.dart';
 import 'package:moony_app/controller/savings_controller.dart';
+import 'package:moony_app/controller/settings_controller.dart';
 import 'package:moony_app/controller/transaction_controller.dart';
 import 'package:moony_app/service/sqlite_service.dart';
 
@@ -15,5 +16,6 @@ class MoonyBinding extends Bindings {
     Get.put(CategoriesController());
     Get.put(IconsController());
     Get.put(ChartController());
+    Get.put(SettingsController());
   }
 }

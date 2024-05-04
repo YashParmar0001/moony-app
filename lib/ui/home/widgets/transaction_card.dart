@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:moony_app/controller/settings_controller.dart';
 import 'package:moony_app/model/transaction.dart';
 import 'package:moony_app/ui/home/screens/transaction_detail_screen.dart';
 
@@ -13,6 +14,8 @@ class TransactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsController = Get.find<SettingsController>();
+
     return InkWell(
       onTap: () {
         Get.to(() => TransactionDetailsScreen(transaction: transaction));
@@ -59,25 +62,28 @@ class TransactionCard extends StatelessWidget {
                   children: [
                     Text(
                       transaction.category.name,
-                      style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style:
+                          Theme.of(context).textTheme.displayMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                     ),
                     Text(
                       DateFormat('dd/MM/y').format(transaction.date),
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: AppColors.midSlateBlue,
-                      ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                color: AppColors.midSlateBlue,
+                              ),
                     ),
                   ],
                 ),
               ],
             ),
             Text(
-              '${transaction.category.isIncome ? '' : '-'}${transaction.money}',
+              '${transaction.category.isIncome ? '' : '-'}${transaction.money}'
+              '${settingsController.currency}',
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ],
         ),

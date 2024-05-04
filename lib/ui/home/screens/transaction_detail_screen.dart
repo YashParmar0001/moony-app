@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:moony_app/controller/current_transaction_controller.dart';
+import 'package:moony_app/controller/settings_controller.dart';
 import 'package:moony_app/controller/transaction_controller.dart';
 import 'package:moony_app/core/ui/widgets/alert_dialog.dart';
 import 'package:moony_app/generated/assets.dart';
@@ -32,6 +33,8 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final settingsController = Get.find<SettingsController>();
+
     return Scaffold(
       appBar: SimpleAppBar(
         title: 'Transaction Details',
@@ -73,7 +76,8 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
               children: [
                 Text(
                   '${widget.transaction.category.isIncome ? '' : '-'}'
-                  '${widget.transaction.money}',
+                  '${widget.transaction.money}'
+                  '${settingsController.currency}',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                         fontFamily: 'Nimbus-Medium',
                       ),

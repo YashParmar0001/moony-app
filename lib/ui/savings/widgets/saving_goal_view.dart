@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
+import 'package:moony_app/controller/settings_controller.dart';
 import 'package:moony_app/generated/assets.dart';
 import 'package:moony_app/model/saving.dart';
 import 'package:moony_app/theme/colors.dart';
@@ -13,6 +15,8 @@ class SavingGoalView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsController = Get.find<SettingsController>();
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -77,8 +81,14 @@ class SavingGoalView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _Data(label: 'Saved', data: saving.savedMoney.toString()),
-              _Data(label: 'Goal', data: saving.desiredAmount.toString()),
+              _Data(
+                label: 'Saved',
+                data: '${saving.savedMoney}${settingsController.currency}',
+              ),
+              _Data(
+                label: 'Goal',
+                data: '${saving.desiredAmount}${settingsController.currency}',
+              ),
             ],
           ),
           const SizedBox(height: 30),
@@ -95,7 +105,8 @@ class SavingGoalView extends StatelessWidget {
             children: [
               _Data(
                 label: 'Money',
-                data: saving.remainingMoney.abs().toString(),
+                data: '${saving.remainingMoney.abs()}'
+                    '${settingsController.currency}',
               ),
               _Data(label: 'Time', data: '${saving.remainingDays} day'),
             ],
