@@ -65,7 +65,7 @@ class CurrentTransactionController extends GetxController {
       );
       int? historyId;
       SavingHistory? history;
-      if (category!.name == 'Saving') {
+      if (category!.name == 'Saving' && saving != null) {
         history = SavingHistory(
           id: 0,
           amount: transaction.money,

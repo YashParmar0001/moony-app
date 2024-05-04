@@ -14,4 +14,10 @@ class AppColors {
   static const Color begonia = Color(0xFFFF7171);
 
   static const Color white = Color(0xFFFFFFFF);
+
+  static const Color newYorkPink = Color(0xFFD77970);
+  static const Color metallicRed = Color(0xFFD12D2D);
+  static const Color pewterBlue = Color(0xFF87AFB0);
+  static const Color charm = Color(0xFFCB7D8C);
+  static const Color middleGreen = Color(0xFF518D50);
 }

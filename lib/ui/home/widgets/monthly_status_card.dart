@@ -113,16 +113,6 @@ class _MonthlyStatusCardState extends State<MonthlyStatusCard> {
   }
 
   Future<void> _showMonthPicker() async {
-    // final date = await showMonthYearPicker(
-    //   context: context,
-    //   firstDate: DateTime(1970),
-    //   lastDate: DateTime.now(),
-    //   initialDate: DateTime.now(),
-    // );
-    //
-    // if (date != null) {
-    //   transactionController.setMonthYear(date);
-    // }
     showMonthPicker(
       context,
       onSelected: (month, year) {
