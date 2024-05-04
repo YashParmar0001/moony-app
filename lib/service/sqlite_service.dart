@@ -121,6 +121,21 @@ class SqliteService {
     return response;
   }
 
+  Future<int> deleteCategory(int id) async {
+    final Database db = await initializeDB();
+    await db.delete(
+      'transactions',
+      where: 'category_id = ?',
+      whereArgs: [id],
+    );
+    final response = await db.delete(
+      'category',
+      where: 'category_id = ?',
+      whereArgs: [id],
+    );
+    return response;
+  }
+
   Future<int> updateTransaction(t.Transaction transaction) async {
     dev.log('Update transaction: $transaction', name: 'Transaction');
     final Database db = await initializeDB();

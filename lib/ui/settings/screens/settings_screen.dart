@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:moony_app/controller/settings_controller.dart';
 import 'package:moony_app/generated/assets.dart';
 import 'package:moony_app/theme/colors.dart';
+import 'package:moony_app/ui/settings/screens/edit_categories_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -80,39 +81,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               _buildDivider(),
               _buildOption(
-                context,
-                'Categories',
-                Icons.category,
+                context: context,
+                title: 'Categories',
+                icon: Icons.category,
+                onTap: () => Get.to(() => const EditCategoriesScreen()),
               ),
               _buildDivider(),
               _buildOption(
-                context,
-                'Invite friends',
-                Icons.people_alt_outlined,
+                context: context,
+                title: 'Invite friends',
+                icon: Icons.people_alt_outlined,
+                onTap: () {},
               ),
               _buildDivider(),
               _buildOption(
-                context,
-                'Give us Feedback',
-                Icons.feedback_outlined,
+                context: context,
+                title: 'Give us Feedback',
+                icon: Icons.feedback_outlined,
+                onTap: () {},
               ),
               _buildDivider(),
               _buildOption(
-                context,
-                'Rate us',
-                Icons.star,
+                context: context,
+                title: 'Rate us',
+                icon: Icons.star,
+                onTap: () {},
               ),
               _buildDivider(),
               _buildOption(
-                context,
-                'About',
-                Icons.info_outline,
+                context: context,
+                title: 'About',
+                icon: Icons.info_outline,
+                onTap: () {},
               ),
               _buildDivider(),
               _buildOption(
-                context,
-                'For developer',
-                Icons.developer_mode_outlined,
+                context: context,
+                title: 'For developer',
+                icon: Icons.developer_mode_outlined,
+                onTap: () {},
               ),
             ],
           ),
@@ -121,27 +128,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildOption(BuildContext context, String title, IconData icon) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.headlineMedium,
+  Widget _buildOption({
+    required BuildContext context,
+    required String title,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 10,
         ),
-        Icon(
-          icon,
-          size: 30,
-          color: Colors.grey,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            Icon(
+              icon,
+              size: 30,
+              color: Colors.grey,
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   Widget _buildDivider() {
     return const Divider(
       thickness: 1.5,
-      height: 30,
     );
   }
 }
