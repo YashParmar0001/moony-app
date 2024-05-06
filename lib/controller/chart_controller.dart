@@ -93,6 +93,7 @@ class ChartController extends GetxController {
     }
     _totalExpense.value = total;
 
+    dev.log('Category amount map: $categoryAmountMap', name: 'Chart');
     _chartItems.value = categoryAmountMap.entries.map(
       (entry) {
         return ChartItem(

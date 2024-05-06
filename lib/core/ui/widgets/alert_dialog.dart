@@ -8,12 +8,14 @@ class CustomAlertDialog extends StatelessWidget {
     required this.content,
     required this.onPressOk,
     required this.onPressCancel,
+    this.showOnlyOK = false,
   });
 
   final String title;
   final String content;
   final VoidCallback onPressOk;
   final VoidCallback onPressCancel;
+  final bool showOnlyOK;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class CustomAlertDialog extends StatelessWidget {
       actions: [
         Row(
           children: [
-            Expanded(
+            if (!showOnlyOK) Expanded(
               child: TextButton(
                 onPressed: onPressCancel,
                 style: TextButton.styleFrom(

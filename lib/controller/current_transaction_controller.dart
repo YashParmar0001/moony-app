@@ -1,6 +1,7 @@
 import 'dart:developer' as dev;
 
 import 'package:get/get.dart';
+import 'package:moony_app/controller/savings_controller.dart';
 import 'package:moony_app/model/category.dart';
 import 'package:moony_app/model/query_response.dart';
 import 'package:moony_app/model/saving.dart';
@@ -42,6 +43,25 @@ class CurrentTransactionController extends GetxController {
   set date(DateTime value) => _date.value = value;
 
   set saving(Saving? value) => _saving.value = value;
+
+  @override
+  void onInit() {
+    Worker worker = ever(_category, (category) {
+      if (category != null && category.name == 'Saving') {
+        final savings = Get.find<SavingsController>().savings;
+        if (savings.isEmpty) {
+          dev.log('Savings are empty', name: 'Saving');
+          _category.value = null;
+          Get.snackbar(
+            'Category',
+            'You have no saving goals, Try adding one!',
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        }
+      }
+    });
+    super.onInit();
+  }
 
   void populate(Transaction transaction) {
     money = transaction.money;

@@ -3,10 +3,18 @@ import 'package:flutter/material.dart';
 import '../../../theme/colors.dart';
 
 class AppBarAction extends StatelessWidget {
-  const AppBarAction({super.key, required this.icon, required this.onPressed,});
+  const AppBarAction({
+    super.key,
+    required this.icon,
+    required this.onPressed,
+    this.color = AppColors.ghostWhite,
+    this.iconColor = AppColors.charcoal,
+  });
 
   final IconData icon;
   final VoidCallback onPressed;
+  final Color color;
+  final Color iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +30,7 @@ class AppBarAction extends StatelessWidget {
           vertical: 8,
         ),
         decoration: BoxDecoration(
-          color: AppColors.ghostWhite,
+          color: color,
           borderRadius: BorderRadius.circular(5),
           boxShadow: const [
             BoxShadow(
@@ -33,7 +41,10 @@ class AppBarAction extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(icon),
+        child: Icon(
+          icon,
+          color: iconColor,
+        ),
       ),
     );
   }

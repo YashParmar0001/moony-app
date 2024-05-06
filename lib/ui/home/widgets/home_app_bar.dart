@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moony_app/controller/current_transaction_controller.dart';
+import 'package:moony_app/controller/transactions_filter_controller.dart';
 import 'package:moony_app/ui/home/screens/add_transaction_screen.dart';
+import 'package:moony_app/ui/home/screens/select_category_screen.dart';
 import 'package:moony_app/ui/home/widgets/app_bar_action.dart';
 
 import '../../../theme/colors.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppBar({super.key, required this.onSelected});
-
-  final void Function(String) onSelected;
+  const HomeAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final transactionsFilterController =
+        Get.find<TransactionsFilterController>();
+
     return AppBar(
       clipBehavior: Clip.none,
       backgroundColor: AppColors.aliceBlue,
@@ -24,16 +27,27 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
       ),
       actions: [
-        _buildFilterMenu(),
-        AppBarAction(
-          icon: Icons.add,
-          onPressed: () {
-            Get.to(
-              () => AddTransactionScreen(
-                currentTransactionController: CurrentTransactionController(),
+        Obx(() => _buildFilterMenu(transactionsFilterController)),
+        Obx(
+          () => AppBarAction(
+            icon: Icons.category_outlined,
+            onPressed: () => Get.to(
+              () => SelectCategoryScreen(
+                onSelectCategory: (category) {
+                  if (category != null) {
+                    Get.find<TransactionsFilterController>()
+                        .filterCategoryWise(category);
+                  }
+                },
               ),
-            );
-          },
+            ),
+            color: transactionsFilterController.categoryFilterApplied
+                ? AppColors.spiroDiscoBall
+                : AppColors.ghostWhite,
+            iconColor: transactionsFilterController.categoryFilterApplied
+                ? AppColors.white
+                : AppColors.charcoal,
+          ),
         ),
         const SizedBox(width: 10),
       ],
@@ -43,7 +57,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(70);
 
-  Widget _buildFilterMenu() {
+  Widget _buildFilterMenu(TransactionsFilterController filterController) {
     return PopupMenuButton(
       icon: Container(
         padding: const EdgeInsets.symmetric(
@@ -51,7 +65,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           vertical: 8,
         ),
         decoration: BoxDecoration(
-          color: AppColors.ghostWhite,
+          color: filterController.incomeFilterApplied
+              ? AppColors.spiroDiscoBall
+              : AppColors.ghostWhite,
           borderRadius: BorderRadius.circular(5),
           boxShadow: const [
             BoxShadow(
@@ -62,9 +78,20 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ],
         ),
-        child: const Icon(Icons.filter_alt_outlined),
+        child: Icon(
+          Icons.filter_alt_outlined,
+          color: filterController.incomeFilterApplied
+              ? AppColors.white
+              : AppColors.charcoal,
+        ),
       ),
-      onSelected: onSelected,
+      onSelected: (value) {
+        if (value == 'all') {
+          filterController.removeFilters();
+        } else {
+          filterController.filterIncomeStatus(value == 'income' ? true : false);
+        }
+      },
       itemBuilder: (context) {
         return [
           const PopupMenuItem<String>(

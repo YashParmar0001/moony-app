@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moony_app/controller/current_transaction_controller.dart';
 import 'package:moony_app/controller/transaction_controller.dart';
+import 'package:moony_app/core/ui/widgets/alert_dialog.dart';
 import 'package:moony_app/theme/colors.dart';
 import 'package:moony_app/ui/home/screens/select_category_screen.dart';
 import 'package:moony_app/ui/home/widgets/category_selection_field.dart';
@@ -13,7 +14,6 @@ import 'package:moony_app/ui/home/widgets/notes_field.dart';
 import 'package:moony_app/ui/home/widgets/simple_app_bar.dart';
 
 import '../../../controller/savings_controller.dart';
-import '../../../model/saving.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   const AddTransactionScreen({
@@ -115,11 +115,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         final category = currentTransactionController.category;
                         if (category != null && category.name == 'Saving') {
                           final savings = Get.find<SavingsController>().savings;
-                          if (savings.isEmpty) return const SizedBox();
+                          if (savings.isEmpty) {
+                            return const SizedBox();
+                          }
 
                           currentTransactionController.saving = savings.first;
 
-                          dev.log('Savings: $savings', name: 'TransactionSavings');
+                          dev.log('Savings: $savings',
+                              name: 'TransactionSavings');
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                               vertical: 5,
@@ -184,6 +187,22 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showNoSavingsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomAlertDialog(
+          title: 'No Savings',
+          content:
+              "You have no saving goals to add this category. Try adding one!",
+          onPressOk: () => Get.back,
+          onPressCancel: () {},
+          showOnlyOK: true,
+        );
+      },
     );
   }
 
