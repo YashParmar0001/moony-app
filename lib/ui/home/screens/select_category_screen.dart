@@ -6,9 +6,14 @@ import 'package:moony_app/ui/home/widgets/simple_app_bar.dart';
 import '../../../model/category.dart';
 
 class SelectCategoryScreen extends StatelessWidget {
-  const SelectCategoryScreen({super.key, required this.onSelectCategory});
+  const SelectCategoryScreen({
+    super.key,
+    required this.onSelectCategory,
+    this.onlyExpense = false,
+  });
 
   final void Function(Category?) onSelectCategory;
+  final bool onlyExpense;
 
   @override
   Widget build(BuildContext context) {
@@ -20,58 +25,75 @@ class SelectCategoryScreen extends StatelessWidget {
         title: 'Categories',
         actions: [],
       ),
-      body: DefaultTabController(
-        length: 2,
-        child: Column(
-          children: [
-            const TabBar(
-              indicatorSize: TabBarIndicatorSize.tab,
-              tabs: [
-                Tab(
-                  child: Text('EXPENSES'),
-                ),
-                Tab(
-                  child: Text('INCOME'),
-                ),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
+      body: onlyExpense
+          ? Obx(
+              () {
+                final list = categoriesController.categories;
+                if (list.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return _buildCategoriesList(
+                    categoriesController.categories
+                        .where((e) => !e.isIncome)
+                        .toList(),
+                  );
+                }
+              },
+            )
+          : DefaultTabController(
+              length: 2,
+              child: Column(
                 children: [
-                  Obx(
-                    () {
-                      final list = categoriesController.categories;
-                      if (list.isEmpty) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else {
-                        return _buildCategoriesList(
-                          categoriesController.categories
-                              .where((e) => !e.isIncome)
-                              .toList(),
-                        );
-                      }
-                    },
+                  const TabBar(
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    tabs: [
+                      Tab(
+                        child: Text('EXPENSES'),
+                      ),
+                      Tab(
+                        child: Text('INCOME'),
+                      ),
+                    ],
                   ),
-                  Obx(
-                    () {
-                      final list = categoriesController.categories;
-                      if (list.isEmpty) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else {
-                        return _buildCategoriesList(
-                          categoriesController.categories
-                              .where((e) => e.isIncome)
-                              .toList(),
-                        );
-                      }
-                    },
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        Obx(
+                          () {
+                            final list = categoriesController.categories;
+                            if (list.isEmpty) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else {
+                              return _buildCategoriesList(
+                                categoriesController.categories
+                                    .where((e) => !e.isIncome)
+                                    .toList(),
+                              );
+                            }
+                          },
+                        ),
+                        Obx(
+                          () {
+                            final list = categoriesController.categories;
+                            if (list.isEmpty) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else {
+                              return _buildCategoriesList(
+                                categoriesController.categories
+                                    .where((e) => e.isIncome)
+                                    .toList(),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 

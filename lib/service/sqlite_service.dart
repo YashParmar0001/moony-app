@@ -1,6 +1,7 @@
 import 'dart:developer' as dev;
 
 import 'package:moony_app/core/data/initial_data.dart';
+import 'package:moony_app/model/budget.dart';
 import 'package:moony_app/model/category.dart';
 import 'package:moony_app/model/category_icon.dart';
 import 'package:moony_app/model/saving.dart';
@@ -62,6 +63,15 @@ class SqliteService {
           "tran_id INTEGER NULL"
           ")",
         );
+        await database.execute(
+          "CREATE TABLE budget ("
+          "budget_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+          "category_id INTEGER, "
+          "budget_limit INTEGER, "
+          "month INTEGER, "
+          "year INTEGER"
+          ")",
+        );
         await populateCategories(database);
         await populateIcons(database);
       },
@@ -90,52 +100,6 @@ class SqliteService {
     return response;
   }
 
-  Future<int> deleteSaving(int id) async {
-    final Database db = await initializeDB();
-    final response = await db.delete(
-      'savings',
-      where: 'saving_id = ?',
-      whereArgs: [id],
-    );
-    return response;
-  }
-
-  Future<int> deleteSavingHistory(int id) async {
-    final Database db = await initializeDB();
-    final response = await db.delete(
-      'saving_history',
-      where: 'saving_id = ?',
-      whereArgs: [id],
-    );
-    return response;
-  }
-
-  Future<int> deleteSavingHistoryById(int id) async {
-    final Database db = await initializeDB();
-    final response = await db.delete(
-      'saving_history',
-      where: 'history_id = ?',
-      whereArgs: [id],
-    );
-    dev.log('Delete history response: $response', name: 'Saving');
-    return response;
-  }
-
-  Future<int> deleteCategory(int id) async {
-    final Database db = await initializeDB();
-    await db.delete(
-      'transactions',
-      where: 'category_id = ?',
-      whereArgs: [id],
-    );
-    final response = await db.delete(
-      'category',
-      where: 'category_id = ?',
-      whereArgs: [id],
-    );
-    return response;
-  }
-
   Future<int> updateTransaction(t.Transaction transaction) async {
     dev.log('Update transaction: $transaction', name: 'Transaction');
     final Database db = await initializeDB();
@@ -149,78 +113,6 @@ class SqliteService {
     return id;
   }
 
-  Future<int> updateSaving(Saving saving) async {
-    dev.log('Update saving: $saving', name: 'Saving');
-    final Database db = await initializeDB();
-    final id = await db.update(
-      'savings',
-      saving.toMap(),
-      where: 'saving_id = ?',
-      whereArgs: [saving.id],
-    );
-    dev.log('Updated saving: $id', name: 'Saving');
-    return id;
-  }
-
-  Future<int> updateSavingHistory(SavingHistory history) async {
-    final Database db = await initializeDB();
-    final id = await db.update(
-      'saving_history',
-      history.toMap(),
-      where: 'history_id = ?',
-      whereArgs: [history.id],
-    );
-    dev.log('Updated saving history: saving id: ${history.savingId} | id: $id');
-    return id;
-  }
-
-  Future<int> addSaving(Saving saving) async {
-    final Database db = await initializeDB();
-    final id = await db.insert(
-      'savings',
-      saving.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    dev.log('Inserted saving: $id', name: 'Saving');
-    return id;
-  }
-
-  Future<int> addSavingHistory(SavingHistory history) async {
-    final Database db = await initializeDB();
-    final id = await db.insert(
-      'saving_history',
-      history.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    dev.log(
-      'Inserted saving history: saving id: ${history.savingId} | Id: ${history.id}',
-      name: 'Saving',
-    );
-    return id;
-  }
-
-  Future<int> addCategory(Category category) async {
-    final Database db = await initializeDB();
-    final id = await db.insert(
-      'category',
-      category.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    dev.log('Inserted category: $id', name: 'Category');
-    return id;
-  }
-
-  Future<int> addIcon(CategoryIcon icon) async {
-    final Database db = await initializeDB();
-    final id = await db.insert(
-      'category_icon',
-      icon.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    dev.log('Inserted icon: $id', name: 'Icon');
-    return id;
-  }
-
   Future<List<t.Transaction>> getTransactions(DateTime date) async {
     final db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
@@ -230,7 +122,6 @@ class SqliteService {
       'where strftime("%m", datetime(date / 1000, "unixepoch")) = "${date.month.toString().padLeft(2, '0')}" '
       'and strftime("%Y", datetime(date / 1000, "unixepoch")) = "${date.year}"',
     );
-    // dev.log('Result: $queryResult', name: 'Transaction');
     final list = queryResult.map((e) {
       final map = {
         'tran_id': e['tran_id'],
@@ -249,10 +140,8 @@ class SqliteService {
         'date': e['date'],
         'history_id': e['history_id'],
       };
-      // dev.log('Map: $map', name: 'Transaction');
       return t.Transaction.fromMap(map);
     }).toList();
-    // dev.log('Final result: $list', name: 'Transaction');
     return list;
   }
 
@@ -283,6 +172,77 @@ class SqliteService {
       'history_id': transactionMap['history_id'],
     };
     return t.Transaction.fromMap(map);
+  }
+
+  Future<List<t.Transaction>> getTransactionsByCategory(
+    int categoryId,
+    int month,
+    int year,
+  ) async {
+    final db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from transactions '
+      'join category on transactions.category_id = category.category_id '
+      'join category_icon on category.icon_id = category_icon.icon_id '
+      'where transactions.category_id = $categoryId '
+      'and strftime("%m", datetime(date / 1000, "unixepoch")) = "${month.toString().padLeft(2, '0')}" '
+      'and strftime("%Y", datetime(date / 1000, "unixepoch")) = "$year"',
+    );
+    final list = queryResult.map((e) {
+      final map = {
+        'tran_id': e['tran_id'],
+        'money': e['money'],
+        'category': {
+          'category_id': e['category_id'],
+          'is_income': e['is_income'],
+          'name': e['name'],
+          'icon': {
+            'icon_id': e['icon_id'],
+            'icon_category': e['icon_category'],
+            'icon': e['icon'],
+          },
+        },
+        'note': e['note'],
+        'date': e['date'],
+        'history_id': e['history_id'],
+      };
+      return t.Transaction.fromMap(map);
+    }).toList();
+    return list;
+  }
+
+  Future<int> addSaving(Saving saving) async {
+    final Database db = await initializeDB();
+    final id = await db.insert(
+      'savings',
+      saving.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    dev.log('Inserted saving: $id', name: 'Saving');
+    return id;
+  }
+
+  Future<int> deleteSaving(int id) async {
+    final Database db = await initializeDB();
+    final response = await db.delete(
+      'savings',
+      where: 'saving_id = ?',
+      whereArgs: [id],
+    );
+    return response;
+  }
+
+  Future<int> updateSaving(Saving saving) async {
+    dev.log('Update saving: $saving', name: 'Saving');
+    final Database db = await initializeDB();
+    final id = await db.update(
+      'savings',
+      saving.toMap(),
+      where: 'saving_id = ?',
+      whereArgs: [saving.id],
+    );
+    dev.log('Updated saving: $id', name: 'Saving');
+    return id;
   }
 
   Future<List<Saving>> getSavings() async {
@@ -333,6 +293,53 @@ class SqliteService {
     return saving;
   }
 
+  Future<int> addSavingHistory(SavingHistory history) async {
+    final Database db = await initializeDB();
+    final id = await db.insert(
+      'saving_history',
+      history.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    dev.log(
+      'Inserted saving history: saving id: ${history.savingId} | Id: ${history.id}',
+      name: 'Saving',
+    );
+    return id;
+  }
+
+  Future<int> deleteSavingHistory(int id) async {
+    final Database db = await initializeDB();
+    final response = await db.delete(
+      'saving_history',
+      where: 'saving_id = ?',
+      whereArgs: [id],
+    );
+    return response;
+  }
+
+  Future<int> deleteSavingHistoryById(int id) async {
+    final Database db = await initializeDB();
+    final response = await db.delete(
+      'saving_history',
+      where: 'history_id = ?',
+      whereArgs: [id],
+    );
+    dev.log('Delete history response: $response', name: 'Saving');
+    return response;
+  }
+
+  Future<int> updateSavingHistory(SavingHistory history) async {
+    final Database db = await initializeDB();
+    final id = await db.update(
+      'saving_history',
+      history.toMap(),
+      where: 'history_id = ?',
+      whereArgs: [history.id],
+    );
+    dev.log('Updated saving history: saving id: ${history.savingId} | id: $id');
+    return id;
+  }
+
   Future<List<SavingHistory>> getSavingHistory(int savingId) async {
     final db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
@@ -341,6 +348,96 @@ class SqliteService {
     );
     dev.log('Saving history query: $queryResult', name: 'Saving');
     return queryResult.map((e) => SavingHistory.fromMap(e)).toList();
+  }
+
+  Future<int> addBudget(Budget budget) async {
+    final db = await initializeDB();
+    final id = await db.insert(
+      'budget',
+      budget.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    dev.log('Inserted budget: $id', name: 'Budget');
+    return id;
+  }
+
+  Future<int> deleteBudget(int budgetId) async {
+    final db = await initializeDB();
+    final response = await db.delete(
+      'budget',
+      where: 'budget_id = ?',
+      whereArgs: [budgetId],
+    );
+    return response;
+  }
+
+  Future<List<Budget>> getBudgets(int month, int year) async {
+    final db = await initializeDB();
+    final queryResult = await db.rawQuery(
+      'select * from budget '
+      'join category on budget.category_id = category.category_id '
+      'join category_icon on category.icon_id = category_icon.icon_id '
+      // 'join transactions on transactions.category_id = budget.category_id, '
+      'where month = $month and year = $year',
+    );
+    final list = queryResult.map((e) {
+      final map = {
+        'id': e['budget_id'],
+        'limit': e['budget_limit'],
+        'month': e['month'],
+        'year': e['year'],
+        'category': {
+          'category_id': e['category_id'],
+          'is_income': e['is_income'],
+          'name': e['name'],
+          'icon': {
+            'icon_id': e['icon_id'],
+            'icon_category': e['icon_category'],
+            'icon': e['icon'],
+          },
+        },
+        'spent': 0,
+      };
+      return Budget.fromMap(map);
+    }).toList();
+    return list;
+  }
+
+  Future<int> addCategory(Category category) async {
+    final Database db = await initializeDB();
+    final id = await db.insert(
+      'category',
+      category.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    dev.log('Inserted category: $id', name: 'Category');
+    return id;
+  }
+
+  Future<int> deleteCategory(int id) async {
+    final Database db = await initializeDB();
+    await db.delete(
+      'transactions',
+      where: 'category_id = ?',
+      whereArgs: [id],
+    );
+    final response = await db.delete(
+      'category',
+      where: 'category_id = ?',
+      whereArgs: [id],
+    );
+    return response;
+  }
+
+  Future<int> addIcon(CategoryIcon icon) async {
+    final Database db = await initializeDB();
+    final id = await db.insert(
+      'category_icon',
+      icon.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    dev.log('Inserted icon: $id', name: 'Icon');
+    return id;
   }
 
   Future<List<Category>> getCategories() async {

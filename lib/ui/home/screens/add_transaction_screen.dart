@@ -190,22 +190,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  void _showNoSavingsDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return CustomAlertDialog(
-          title: 'No Savings',
-          content:
-              "You have no saving goals to add this category. Try adding one!",
-          onPressOk: () => Get.back,
-          onPressCancel: () {},
-          showOnlyOK: true,
-        );
-      },
-    );
-  }
-
   Future<void> _saveTransaction() async {
     final response = await currentTransactionController.addTransaction();
     if (response == null) {

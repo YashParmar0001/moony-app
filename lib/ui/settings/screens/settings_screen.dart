@@ -136,6 +136,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }) {
     return InkWell(
       onTap: onTap,
+      splashFactory: NoSplash.splashFactory,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 10,

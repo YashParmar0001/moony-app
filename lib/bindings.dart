@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:moony_app/controller/budget_controller.dart';
 import 'package:moony_app/controller/categories_controller.dart';
 import 'package:moony_app/controller/chart_controller.dart';
 import 'package:moony_app/controller/icons_controller.dart';
@@ -15,6 +16,7 @@ class MoonyBinding extends Bindings {
     Get.put(TransactionController());
     Get.put(TransactionsFilterController());
     Get.put(SavingsController());
+    Get.put(BudgetController());
     Get.put(CategoriesController());
     Get.put(IconsController());
     Get.put(ChartController());

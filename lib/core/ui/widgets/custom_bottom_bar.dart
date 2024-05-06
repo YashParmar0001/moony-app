@@ -16,10 +16,10 @@ class CustomBottomNavBar extends StatefulWidget {
 class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   @override
   Widget build(BuildContext context) {
-    dev.log('Rebuilding tab bar', name: 'BottomBar');
     final icons = [
       Icons.home_outlined,
       Icons.savings_outlined,
+      Icons.bar_chart_rounded,
       Icons.pie_chart_outline,
       Icons.settings_outlined,
     ];
@@ -48,7 +48,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         },
         splashFactory: NoSplash.splashFactory,
         tabs: List.generate(
-          4,
+          5,
           (index) {
             final selected = widget.tabController.index == index;
             return Tab(
