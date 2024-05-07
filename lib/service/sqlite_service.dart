@@ -368,6 +368,18 @@ class SqliteService {
       where: 'budget_id = ?',
       whereArgs: [budgetId],
     );
+    dev.log('Budget deleted: $response', name: 'Budget');
+    return response;
+  }
+
+  Future<int> updateBudget(Budget budget) async {
+    final db = await initializeDB();
+    final response = await db.update(
+      'budget',
+      budget.toMap(),
+      where: 'budget_id = ?',
+      whereArgs: [budget.id],
+    );
     return response;
   }
 

@@ -42,9 +42,11 @@ class CurrentBudgetController extends GetxController {
 
   set category(Category? category) => _category.value = category;
 
-  void populate(Transaction transaction) {
-    amount = transaction.money;
-    category = transaction.category;
+  void populate(Budget budget) {
+    amount = budget.limit;
+    category = budget.category;
+    month = budget.month;
+    year = budget.year;
   }
 
   Future<String?> addBudget() async {
@@ -74,41 +76,40 @@ class CurrentBudgetController extends GetxController {
     }
   }
 
-  // Future<QueryResponse> updateTransaction(int id) async {
-  //   QueryResponse queryResponse = const QueryResponse<Transaction>(
-  //     data: null,
-  //     error: null,
-  //   );
-  //   if (!validate()) {
-  //     return queryResponse.copyWith(
-  //       error: 'Please fill the details properly!',
-  //     );
-  //   }
-  //
-  //   final service = Get.find<SqliteService>();
-  //
-  //   try {
-  //     final transaction = Transaction(
-  //       id: id,
-  //       money: money,
-  //       category: category!,
-  //       note: note,
-  //       date: date,
-  //     );
-  //     // dev.log('Updating transaction: $transaction', name: 'Transaction');
-  //     final response = await service.updateTransaction(
-  //       transaction,
-  //     );
-  //
-  //     if (response == 0) {
-  //       return queryResponse.copyWith(error: 'Something went wrong!');
-  //     } else {
-  //       return queryResponse.copyWith(data: transaction);
-  //     }
-  //   } catch (_) {
-  //     return queryResponse.copyWith(error: 'Something went wrong!');
-  //   }
-  // }
+  Future<QueryResponse> updateBudget(Budget oldBudget) async {
+    QueryResponse queryResponse = const QueryResponse<Budget>(
+      data: null,
+      error: null,
+    );
+    if (!validate()) {
+      return queryResponse.copyWith(
+        error: 'Please fill the details properly!',
+      );
+    }
+
+    final service = Get.find<SqliteService>();
+
+    try {
+      final budget = Budget(
+        id: oldBudget.id,
+        category: category!,
+        limit: amount,
+        month: month,
+        year: year,
+        transactions: oldBudget.transactions,
+      );
+      // dev.log('Updating transaction: $transaction', name: 'Transaction');
+      final response = await service.updateBudget(budget);
+
+      if (response == 0) {
+        return queryResponse.copyWith(error: 'Something went wrong!');
+      } else {
+        return queryResponse.copyWith(data: budget);
+      }
+    } catch (_) {
+      return queryResponse.copyWith(error: 'Something went wrong!');
+    }
+  }
 
   bool validateMoney() {
     if (money == 0) {

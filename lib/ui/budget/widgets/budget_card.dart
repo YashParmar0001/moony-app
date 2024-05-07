@@ -1,7 +1,12 @@
+import 'dart:developer' as dev;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
-import 'package:moony_app/controller/settings_controller.dart';
+import 'package:moony_app/controller/budget_controller.dart';
+import 'package:moony_app/controller/current_budget_controller.dart';
 import 'package:moony_app/model/budget.dart';
+import 'package:moony_app/ui/budget/screens/edit_budget_screen.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../../../theme/colors.dart';
@@ -13,12 +18,52 @@ class BudgetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settingsController = Get.find<SettingsController>();
-
-    return InkWell(
-      onTap: () {
-        // Get.to(() => TransactionDetailsScreen(transaction: transaction));
-      },
+    return Slidable(
+      startActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (context) {
+              dev.log('Deleting budget', name: 'Budget');
+              _deleteBudget();
+            },
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+            ),
+            backgroundColor: AppColors.begonia,
+            foregroundColor: Colors.white,
+            icon: Icons.delete,
+            label: 'Delete',
+          ),
+        ],
+      ),
+      endActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (context) {
+              Get.to(
+                () => EditBudgetScreen(
+                  currentBudgetController: Get.put(
+                    CurrentBudgetController(),
+                    permanent: false,
+                  ),
+                  budget: budget,
+                ),
+              );
+            },
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(10),
+              bottomRight: Radius.circular(10),
+            ),
+            backgroundColor: AppColors.spiroDiscoBall,
+            foregroundColor: Colors.white,
+            icon: Icons.edit,
+            label: 'Edit',
+          ),
+        ],
+      ),
       child: Container(
         margin: const EdgeInsets.symmetric(
           horizontal: 10,
@@ -125,5 +170,24 @@ class BudgetCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _deleteBudget() async {
+    final budgetController = Get.find<BudgetController>();
+    final response = await budgetController.deleteBudget(budget.id);
+    if (response) {
+      budgetController.fetchBudgets();
+      Get.snackbar(
+        'Budget',
+        'Budget deleted successfully!',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } else {
+      Get.snackbar(
+        'Budget',
+        'Something went wrong. Please try again!',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 }

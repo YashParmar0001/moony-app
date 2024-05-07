@@ -91,6 +91,11 @@ class BudgetController extends GetxController {
     calculateStats();
   }
 
+  Future<bool> deleteBudget(int budgetId) async {
+    final response = await service.deleteBudget(budgetId);
+    return response >= 1;
+  }
+
   void reset() {
     _budgets.value = [];
     _totalBudget.value = 0;
