@@ -9,6 +9,7 @@ import 'package:moony_app/model/budget.dart';
 import 'package:moony_app/ui/budget/screens/edit_budget_screen.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import '../../../core/ui/widgets/alert_dialog.dart';
 import '../../../theme/colors.dart';
 
 class BudgetCard extends StatelessWidget {
@@ -25,7 +26,7 @@ class BudgetCard extends StatelessWidget {
           SlidableAction(
             onPressed: (context) {
               dev.log('Deleting budget', name: 'Budget');
-              _deleteBudget();
+              _showDeleteDialog(context);
             },
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10),
@@ -169,6 +170,25 @@ class BudgetCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomAlertDialog(
+          onPressOk: () {
+            Get.back();
+            _deleteBudget();
+          },
+          onPressCancel: () {
+            Get.back();
+          },
+          title: 'Warning',
+          content: 'Do you really want to delete this budget?',
+        );
+      },
     );
   }
 
