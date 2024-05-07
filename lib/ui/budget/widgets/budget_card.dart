@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:moony_app/controller/settings_controller.dart';
 import 'package:moony_app/model/budget.dart';
-import 'package:moony_app/ui/home/screens/transaction_detail_screen.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../../../theme/colors.dart';
@@ -32,7 +30,7 @@ class BudgetCard extends StatelessWidget {
         ),
         decoration: ShapeDecoration(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(10),
           ),
           shadows: const [
             BoxShadow(

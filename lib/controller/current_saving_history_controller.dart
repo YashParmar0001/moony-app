@@ -11,7 +11,7 @@ import '../model/saving_history.dart';
 class CurrentSavingHistoryController extends GetxController {
   final _description = ''.obs;
   final _amount = 0.obs;
-  final _date = Rx<DateTime?>(null);
+  final _date = DateTime.now().obs;
 
   final _amountError = Rx<String?>(null);
 
@@ -19,7 +19,7 @@ class CurrentSavingHistoryController extends GetxController {
 
   int get amount => _amount.value;
 
-  DateTime? get date => _date.value;
+  DateTime get date => _date.value;
 
   String? get amountError => _amountError.value;
 
@@ -27,7 +27,7 @@ class CurrentSavingHistoryController extends GetxController {
 
   set amount(int value) => _amount.value = value;
 
-  set date(DateTime? value) => _date.value = value;
+  set date(DateTime value) => _date.value = value;
 
   Future<QueryResponse<Saving>> addSavingHistory(
     Saving saving,

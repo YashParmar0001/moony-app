@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:moony_app/controller/current_saving_history_controller.dart';
 import 'package:moony_app/controller/savings_controller.dart';
 import 'package:moony_app/core/ui/widgets/custom_text_field.dart';
+import 'package:moony_app/ui/home/widgets/date_field.dart';
 import 'package:moony_app/ui/home/widgets/simple_app_bar.dart';
 import 'package:moony_app/ui/savings/screens/savings_detail_screen.dart';
-import 'package:moony_app/ui/savings/widgets/due_date_field.dart';
 
 import '../../../model/saving.dart';
 
@@ -90,7 +90,7 @@ class _SaveHistoryScreenState extends State<SaveHistoryScreen> {
             ),
             const SizedBox(height: 30),
             Obx(
-              () => DueDateField(
+              () => DateField(
                 onSelectDate: _showDatePicker,
                 date: currentSavingHistoryController.date,
               ),
@@ -131,7 +131,7 @@ class _SaveHistoryScreenState extends State<SaveHistoryScreen> {
   Future<void> _showDatePicker() async {
     final date = await showDatePicker(
       context: context,
-      initialDate: currentSavingHistoryController.date ?? DateTime.now(),
+      initialDate: currentSavingHistoryController.date,
       firstDate: DateTime(1970),
       lastDate: DateTime(2100),
     );
