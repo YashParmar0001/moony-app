@@ -4,8 +4,7 @@ Moony is a personal finance app that helps users track daily transactions, manag
 
 ## Built using
 
-The app is built using [Flutter](https://flutter.dev/) for cross-platform development, [Firebase](https://firebase.google.com/) for backend services, 
-and [OneSignal](https://onesignal.com/) for push notifications.
+The app is built using [Flutter](https://flutter.dev/) for cross-platform development and [Firebase](https://firebase.google.com/) for backend services.
 
 ![Tech Stack](github_assets/tech.png)
 
